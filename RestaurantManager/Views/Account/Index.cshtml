@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>Welcome to Restaurant Manager</h2>
+
+@if (Context.Session.GetString("Username") != null)
+{
+    <p>Hello, @Context.Session.GetString("Username")!</p>
+    <a href="/Account/Logout">Logout</a>
+}
+else
+{
+    <p>Please <a href="/Account/Login">login</a>.</p>
+}
