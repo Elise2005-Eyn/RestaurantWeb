@@ -1,0 +1,5 @@
+com\restaurant\restaurantmanager\util\DBConnection.class
+com\restaurant\restaurantmanager\dao\UserDAO.class
+com\restaurant\restaurantmanager\RestaurantManager.class
+com\restaurant\restaurantmanager\controller\AccountController.class
+com\restaurant\restaurantmanager\model\User.class
