@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=restaurant_app;encrypt=true;trustServerCertificate=true";
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=restaurant_db;encrypt=true;trustServerCertificate=true";
     private static final String USER = "sa";
     private static final String PASS = "123"; // đổi lại mật khẩu SQL Server của bạn
 

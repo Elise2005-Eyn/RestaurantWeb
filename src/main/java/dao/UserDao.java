@@ -77,4 +77,14 @@ public class UserDao {
             }
         }
     }
+ public User authenticatePlain(String username, String rawPassword) throws Exception {
+    User u = findByUsername(username);
+    if (u == null) return null;
+    // Dùng password_hash cột hiện tại làm "mật khẩu lưu trữ"
+    if (u.getPasswordHash() != null && u.getPasswordHash().equals(rawPassword)) {
+        return u;
+    }
+    return null;
+}
+   
 }
