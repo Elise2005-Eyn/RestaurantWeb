@@ -14,12 +14,11 @@ public class MenuDAO extends DBContext {
      */
     public List<MenuItem> getAllMenuItems() {
         List<MenuItem> menuList = new ArrayList<>();
-        String sql = "SELECT id, name, description, price, discount_percent, category_id, " +
-                     "inventory, image, is_active, code " +
-                     "FROM MenuItem WHERE is_active = 1 ORDER BY created_at DESC";
+        String sql = "SELECT id, name, description, price, discount_percent, category_id, "
+                + "inventory, image, is_active, code "
+                + "FROM MenuItem WHERE is_active = 1 ORDER BY created_at DESC";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 MenuItem item = new MenuItem();
@@ -114,8 +113,8 @@ public class MenuDAO extends DBContext {
      * Thêm món ăn mới (dùng cho admin)
      */
     public boolean addMenuItem(MenuItem item) {
-        String sql = "INSERT INTO MenuItem (name, description, price, discount_percent, category_id, inventory, image, is_active, code, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATETIME())";
+        String sql = "INSERT INTO MenuItem (name, description, price, discount_percent, category_id, inventory, image, is_active, code, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATETIME())";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, item.getName());
@@ -144,8 +143,8 @@ public class MenuDAO extends DBContext {
      * Cập nhật thông tin món ăn
      */
     public boolean updateMenuItem(MenuItem item) {
-        String sql = "UPDATE MenuItem SET name=?, description=?, price=?, discount_percent=?, category_id=?, " +
-                     "inventory=?, image=?, is_active=?, code=? WHERE id=?";
+        String sql = "UPDATE MenuItem SET name=?, description=?, price=?, discount_percent=?, category_id=?, "
+                + "inventory=?, image=?, is_active=?, code=? WHERE id=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, item.getName());
@@ -186,4 +185,37 @@ public class MenuDAO extends DBContext {
             return false;
         }
     }
+
+    public String getMenuNameById(int id) {
+        String sql = "SELECT name FROM dbo.MenuItem WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Lỗi lấy tên món: " + e.getMessage());
+        }
+        return "Không xác định";
+    }
+    
+    public String getMenuNameAndPriceById(int id) {
+    String sql = "SELECT name, price FROM dbo.MenuItem WHERE id = ?";
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String name = rs.getString("name");
+            double price = rs.getDouble("price");
+            return name + " (" + String.format("%,.0f", price) + " VND)";
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return "Không xác định";
+}
+
+
 }

@@ -63,4 +63,25 @@ public class DishDAO extends DBContext {
 
         return list;
     }
+    
+    public List<Dish> getAllDishes() {
+    List<Dish> list = new ArrayList<>();
+    String sql = "SELECT id, name, description, price, imagePath FROM dishes";
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            Dish d = new Dish();
+            d.setId(rs.getInt("id"));
+            d.setName(rs.getString("name"));
+            d.setDescription(rs.getString("description"));
+            d.setPrice(rs.getDouble("price"));
+            d.setImagePath(rs.getString("imagePath"));
+            list.add(d);
+        }
+    } catch (SQLException e) {
+        System.out.println(" Lỗi load dishes: " + e.getMessage());
+    }
+    return list;
+}
+
 }

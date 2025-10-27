@@ -205,13 +205,24 @@
 
 <header class="header-main">
     <div class="header-container">
-        <a href="home" class="logo">NHÀ HÀNG <span>NGON</span></a>
+        <a href="home.jsp" class="logo">NHÀ HÀNG <span>NGON</span></a>
         
         <nav class="main-nav">
             <a href="home">Trang Chủ</a>
-            <a href="menu" style="color: var(--color-gold);">Thực Đơn</a> 
+            <a href="menu?action=list" style="color: var(--color-gold);">Thực Đơn</a> 
             <a href="book-table">Đặt Bàn</a>
-            <a href="login">Đăng Nhập</a>
+
+            <!-- Nếu chưa đăng nhập -->
+            <c:if test="${empty sessionScope.user}">
+                <a href="auth?action=login">Đăng Nhập</a>
+                <a href="auth?action=register">Đăng Ký</a>
+            </c:if>
+
+            <!-- Nếu đã đăng nhập -->
+            <c:if test="${not empty sessionScope.user}">
+                <span>👋 Xin chào, ${sessionScope.user.username}</span>
+                <a href="auth?action=logout">Đăng Xuất</a>
+            </c:if>
         </nav>
     </div>
 </header>
