@@ -222,7 +222,7 @@
             <a href="home">Trang Chủ</a>
             <a href="menu?action=list">Thực Đơn</a>
             <a href="book-table">Đặt Bàn</a>
-            <a href="my-reservations">Đơn đặt bàn của tôi</a>
+            <a href="reservation/my-reservations">Đơn đặt bàn của tôi</a>
 
 
             <!-- Nếu chưa đăng nhập -->

@@ -8,7 +8,7 @@ public class DBContext {
 
     private static final String DB_NAME = "restaurant_db";
     private static final String USER_NAME = "sa";
-    private static final String PASSWORD = "123456";
+    private static final String PASSWORD = "123";
     private static final String HOST = "localhost";
     private static final String PORT = "1433";
 
