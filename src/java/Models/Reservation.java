@@ -1,89 +1,43 @@
 package Models;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.sql.Timestamp;
 
 public class Reservation {
-
-    private long reservationId;
-    private UUID customerId;
-    private LocalDateTime reservedAt;
+    private String reservationId;
+    private String customerId;
+    private Timestamp reservedAt;
     private int reservedDuration;
     private int guestCount;
     private String status;
     private String note;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
-    public long getReservationId() {
-        return reservationId;
-    }
+    // Getters & setters
+    public String getReservationId() { return reservationId; }
+    public void setReservationId(String reservationId) { this.reservationId = reservationId; }
 
-    public void setReservationId(long reservationId) {
-        this.reservationId = reservationId;
-    }
+    public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
 
-    public UUID getCustomerId() {
-        return customerId;
-    }
+    public Timestamp getReservedAt() { return reservedAt; }
+    public void setReservedAt(Timestamp reservedAt) { this.reservedAt = reservedAt; }
 
-    public void setCustomerId(UUID customerId) {
-        this.customerId = customerId;
-    }
+    public int getReservedDuration() { return reservedDuration; }
+    public void setReservedDuration(int reservedDuration) { this.reservedDuration = reservedDuration; }
 
-    public LocalDateTime getReservedAt() {
-        return reservedAt;
-    }
+    public int getGuestCount() { return guestCount; }
+    public void setGuestCount(int guestCount) { this.guestCount = guestCount; }
 
-    public void setReservedAt(LocalDateTime reservedAt) {
-        this.reservedAt = reservedAt;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public int getReservedDuration() {
-        return reservedDuration;
-    }
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 
-    public void setReservedDuration(int reservedDuration) {
-        this.reservedDuration = reservedDuration;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public int getGuestCount() {
-        return guestCount;
-    }
-
-    public void setGuestCount(int guestCount) {
-        this.guestCount = guestCount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
 }
