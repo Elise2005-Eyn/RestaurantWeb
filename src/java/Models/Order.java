@@ -14,6 +14,16 @@ public class Order {
     private String status;
     private String orderType;
     private String note;
+    private String customerName;
+
+public String getCustomerName() {
+    return customerName;
+}
+
+public void setCustomerName(String customerName) {
+    this.customerName = customerName;
+}
+
 
     public long getOrderId() {
         return orderId;
