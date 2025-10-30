@@ -9,23 +9,36 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <style>
+            :root {
+                --color-black: #121212;
+                --color-gray-dark: #1e1e1e;
+                --color-gray-medium: #2a2a2a;
+                --color-gray-light: #aaaaaa;
+                --color-white: #f0f0f0;
+                --color-gold: #E0B841;
+            }
+
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: var(--color-black);
+                color: var(--color-white);
                 margin: 0;
                 padding: 40px 60px;
             }
 
             h1 {
-                color: #5a2fc2;
+                color: var(--color-gold);
                 font-size: 28px;
                 font-weight: 700;
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 margin-bottom: 25px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
 
+            /* --- Thống kê nhỏ --- */
             .stats-container {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -34,23 +47,45 @@
             }
 
             .stat-box {
-                background: white;
+                background: var(--color-gray-dark);
                 border-radius: 12px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                border: 1px solid var(--color-gray-medium);
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
                 padding: 25px;
                 text-align: center;
+                transition: all 0.3s ease;
+            }
+
+            .stat-box:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 6px 15px rgba(224, 184, 65, 0.2);
+                border-color: var(--color-gold);
             }
 
             .stat-icon {
-                font-size: 32px;
-                color: #6a11cb;
+                font-size: 36px;
+                color: var(--color-gold);
                 margin-bottom: 10px;
             }
 
+            .stat-box h3 {
+                font-size: 1.1em;
+                color: var(--color-white);
+                margin-bottom: 8px;
+            }
+
+            .stat-box p {
+                font-size: 1.3em;
+                color: var(--color-gold);
+                font-weight: 700;
+            }
+
+            /* --- Khu vực biểu đồ --- */
             .chart-section {
-                background: white;
+                background: var(--color-gray-dark);
                 border-radius: 12px;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+                border: 1px solid var(--color-gray-medium);
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
                 padding: 25px 30px;
                 margin: 0 auto 50px;
                 width: 90%;
@@ -59,15 +94,16 @@
 
             .chart-section h2 {
                 text-align: center;
-                color: #4b0082;
+                color: var(--color-gold);
                 margin-bottom: 20px;
+                text-transform: uppercase;
             }
 
             canvas {
                 width: 100%;
             }
 
-            /* Biểu đồ tròn */
+            /* --- Biểu đồ tròn --- */
             .pie-container {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -76,26 +112,27 @@
             }
 
             .pie-box {
-                background: white;
+                background: var(--color-gray-dark);
                 border-radius: 12px;
-                box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+                border: 1px solid var(--color-gray-medium);
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
                 padding: 25px;
                 text-align: center;
-                transition: transform 0.2s;
+                transition: transform 0.2s, border-color 0.3s;
             }
 
             .pie-box:hover {
                 transform: translateY(-4px);
+                border-color: var(--color-gold);
+                box-shadow: 0 6px 15px rgba(224, 184, 65, 0.15);
             }
 
             .pie-box h3 {
-                color: #4b0082;
+                color: var(--color-gold);
                 font-size: 17px;
                 margin-bottom: 15px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .pie-box canvas {
@@ -106,47 +143,17 @@
 
             .no-data {
                 font-size: 14px;
-                color: #888;
+                color: var(--color-gray-light);
                 text-align: center;
                 padding: 30px 0;
             }
-            .nav-container {
-                display: flex;
-                gap: 15px;
-                margin-bottom: 35px;
-            }
-
-            .nav-btn {
-                background: #6a11cb;
-                color: white;
-                padding: 10px 18px;
-                border-radius: 8px;
-                text-decoration: none;
-                font-weight: 600;
-                transition: 0.25s;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .nav-btn:hover {
-                background: #8e24aa;
-                transform: translateY(-2px);
-            }
-
         </style>
+
     </head>
 
     <body>
 
         <h1><i class="fa-solid fa-chart-pie"></i> Tổng quan hệ thống</h1>
-        <!-- Thanh điều hướng quản lý -->
-        <div class="nav-container">
-            <a href="staffManager.jsp" class="nav-btn"><i class="fa-solid fa-user-tie"></i> Quản lý Staff</a>
-            <a href="accountManager.jsp" class="nav-btn"><i class="fa-solid fa-user-gear"></i> Quản lý tài khoản</a>
-            <a href="report.jsp" class="nav-btn"><i class="fa-solid fa-chart-line"></i> Báo cáo</a>
-        </div>
-
 
         <div class="stats-container">
             <div class="stat-box">
@@ -274,7 +281,5 @@
             createPie("reservationPie", ${reservationStatusLabels}, ${reservationStatusValues},
                     ['#29B6F6', '#66BB6A', '#FF7043', '#AB47BC', '#FFEE58']);
         </script>
-
-
     </body>
 </html>
