@@ -1,5 +1,7 @@
 package Models;
 
+import java.time.LocalDateTime;
+
 public class User {
     private int id;
     private String username;
@@ -9,7 +11,16 @@ public class User {
     private int roleId;
     private boolean isActived;
 
-    // Getters & Setters
+    // ✅ Thêm các trường phục vụ hồ sơ
+    private String firstName;
+    private String lastName;
+    private String photoUrl;       // đường dẫn ảnh đại diện
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private LocalDateTime lastLoginAt;
+
+    // ===== Getters & Setters =====
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -30,4 +41,31 @@ public class User {
 
     public boolean isActived() { return isActived; }
     public void setActived(boolean actived) { isActived = actived; }
+
+    // ---------- Các trường mới ----------
+
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getPhotoUrl() { return photoUrl; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getModifiedAt() { return modifiedAt; }
+    public void setModifiedAt(LocalDateTime modifiedAt) { this.modifiedAt = modifiedAt; }
+
+    public LocalDateTime getLastLoginAt() { return lastLoginAt; }
+    public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
+
+    // ---------- Tiện ích ----------
+    public String getFullName() {
+        String fn = (firstName != null) ? firstName : "";
+        String ln = (lastName != null) ? lastName : "";
+        return (fn + " " + ln).trim();
+    }
 }
