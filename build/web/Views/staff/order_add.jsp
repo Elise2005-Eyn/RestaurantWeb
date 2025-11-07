@@ -256,180 +256,189 @@
         <!-- Header -->
         <jsp:include page="/Views/components/staff_header.jsp" />
 
+        <!-- Nút Quay lại -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="${pageContext.request.contextPath}/staff/orders" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+
+        <!-- Thêm order -->        
         <div class="container mt-4">
             <div class="form-card">
                 <div class="card-header">
                     <i class="fas fa-plus-circle"></i> Thêm Đơn Hàng Mới
                 </div>
 
-                <div class="card-body">
-                    <form action="${pageContext.request.contextPath}/staff/orders" method="post" id="orderForm">
+                <div class="card-body pt-3">
 
-                        <!-- RESERVATION DROPDOWN -->
-                        <div class="mb-4">
-                            <label class="form-label">Khách hàng (đã đặt bàn)</label>
-                            <select name="reservationId" id="reservationId" class="form-select" required>
-                                <option value="">-- Chọn khách hàng --</option>
-                                <c:forEach var="r" items="${reservations}">
-                                    <option value="${r.reservation_id}" data-customer="${r.customer_id}">
-                                        ${r.customer_name} - ${r.note} (Mã đặt: ${r.reservation_id})
-                                    </option>
-                                </c:forEach>
-                            </select>
-                            <input type="hidden" name="customerId" id="customerId">
-                        </div>
 
-                        <!-- TABLE DROPDOWN -->
-                        <div class="mb-4">
-                            <label class="form-label">Chọn bàn</label>
-                            <select name="tableId" class="form-select" required>
-                                <option value="">-- Chọn bàn --</option>
-                                <c:forEach var="t" items="${tables}">
-                                    <option value="${t.id}">${t.label}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
+                    <div class="card-body">
+                        <form action="${pageContext.request.contextPath}/staff/orders" method="post" id="orderForm">
 
-                        <!-- ORDER TYPE -->
-                        <div class="mb-4">
-                            <label class="form-label">Loại đơn hàng</label>
-                            <select name="orderType" class="form-select" required>
-                                <option value="DINE_IN">Ăn tại chỗ</option>
-                                <option value="TAKE_AWAY">Mang đi</option>
-                            </select>
-                        </div>
-
-                        <!-- ORDER STATUS -->
-                        <div class="mb-4">
-                            <label class="form-label">Trạng thái</label>
-                            <select name="status" class="form-select" required>
-                                <option value="PENDING">Chờ xử lý</option>
-                                <option value="IN_PROGRESS">Đang làm</option>
-                                <option value="COMPLETED">Hoàn tất</option>
-                                <option value="CANCELLED">Đã hủy</option>
-                            </select>
-                        </div>
-
-                        <!-- MENU ITEMS -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Chọn món ăn</label>
-                            <div class="table-responsive">
-                                <table class="table menu-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Tên món</th>
-                                            <th>Giá (₫)</th>
-                                            <th>Số lượng</th>
-                                            <th>Tổng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="menuTableBody">
-                                        <c:forEach var="m" items="${menuItems}">
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input menu-check"
-                                                               name="menuItemId" value="${m.id}"
-                                                               data-price="${m.price}" id="menu-${m.id}">
-                                                        <label class="form-check-label" for="menu-${m.id}">
-                                                            ${m.name}
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td class="text-end fw-medium">${m.price}</td>
-                                                <td>
-                                                    <input type="number" name="quantity" class="form-control qty-input"
-                                                           min="1" value="1" disabled>
-                                                </td>
-                                                <td class="subtotal text-end">0</td>
-                                        <input type="hidden" name="price" value="${m.price}">
-                                        </tr>
+                            <!-- RESERVATION DROPDOWN -->
+                            <div class="mb-4">
+                                <label class="form-label">Khách hàng (đã đặt bàn)</label>
+                                <select name="reservationId" id="reservationId" class="form-select" required>
+                                    <option value="">-- Chọn khách hàng --</option>
+                                    <c:forEach var="r" items="${reservations}">
+                                        <option value="${r.reservation_id}" data-customer="${r.customer_id}">
+                                            ${r.customer_name} - ${r.note} (Mã đặt: ${r.reservation_id})
+                                        </option>
                                     </c:forEach>
-                                    </tbody>
-                                </table>
+                                </select>
+                                <input type="hidden" name="customerId" id="customerId">
                             </div>
-                        </div>
 
-                        <!-- TOTAL AMOUNT -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Tổng tiền (₫)</label>
-                            <div class="total-amount" id="totalAmount">0</div>
-                            <input type="hidden" name="amount" id="totalAmountHidden">
-                        </div>
+                            <!-- TABLE DROPDOWN -->
+                            <div class="mb-4">
+                                <label class="form-label">Chọn bàn</label>
+                                <select name="tableId" class="form-select" required>
+                                    <option value="">-- Chọn bàn --</option>
+                                    <c:forEach var="t" items="${tables}">
+                                        <option value="${t.id}">${t.label}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
 
-                        <!-- NOTE -->
-                        <div class="mb-4">
-                            <label class="form-label">Ghi chú</label>
-                            <textarea name="note" rows="3" class="form-control" placeholder="Nhập ghi chú (nếu có)..."></textarea>
-                        </div>
+                            <!-- ORDER TYPE -->
+                            <div class="mb-4">
+                                <label class="form-label">Loại đơn hàng</label>
+                                <select name="orderType" class="form-select" required>
+                                    <option value="DINE_IN">Ăn tại chỗ</option>
+                                    <option value="TAKE_AWAY">Mang đi</option>
+                                </select>
+                            </div>
 
-                        <!-- BUTTONS -->
-                        <div class="btn-group">
-                            <a href="${pageContext.request.contextPath}/staff/orders" class="btn btn-back">
-                                <i class="fas fa-arrow-left"></i> Quay lại
-                            </a>
-                            <button type="submit" class="btn btn-submit">
-                                <i class="fas fa-save"></i> Lưu đơn hàng
-                            </button>
-                        </div>
-                    </form>
+                            <!-- ORDER STATUS -->
+                            <div class="mb-4">
+                                <label class="form-label">Trạng thái</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="PENDING">Chờ xử lý</option>
+                                    <option value="IN_PROGRESS">Đang làm</option>
+                                    <option value="COMPLETED">Hoàn tất</option>
+                                    <option value="CANCELLED">Đã hủy</option>
+                                </select>
+                            </div>
+
+                            <!-- MENU ITEMS -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Chọn món ăn</label>
+                                <div class="table-responsive">
+                                    <table class="table menu-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tên món</th>
+                                                <th>Giá (₫)</th>
+                                                <th>Số lượng</th>
+                                                <th>Tổng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="menuTableBody">
+                                            <c:forEach var="m" items="${menuItems}">
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input menu-check"
+                                                                   name="menuItemId" value="${m.id}"
+                                                                   data-price="${m.price}" id="menu-${m.id}">
+                                                            <label class="form-check-label" for="menu-${m.id}">
+                                                                ${m.name}
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end fw-medium">${m.price}</td>
+                                                    <td>
+                                                        <input type="number" name="quantity" class="form-control qty-input"
+                                                               min="1" value="1" disabled>
+                                                    </td>
+                                                    <td class="subtotal text-end">0</td>
+                                            <input type="hidden" name="price" value="${m.price}">
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- TOTAL AMOUNT -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Tổng tiền (₫)</label>
+                                <div class="total-amount" id="totalAmount">0</div>
+                                <input type="hidden" name="amount" id="totalAmountHidden">
+                            </div>
+
+                            <!-- NOTE -->
+                            <div class="mb-4">
+                                <label class="form-label">Ghi chú</label>
+                                <textarea name="note" rows="3" class="form-control" placeholder="Nhập ghi chú (nếu có)..."></textarea>
+                            </div>
+
+                            <!-- BUTTONS -->
+
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-submit">
+                                    <i class="fas fa-save"></i> Lưu đơn hàng
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- === GIỮ NGUYÊN TOÀN BỘ LOGIC JS === -->
-        <script>
-            // Gán customerId theo reservation chọn
-            document.getElementById("reservationId").addEventListener("change", function () {
-                const selected = this.options[this.selectedIndex];
-                document.getElementById("customerId").value = selected.getAttribute("data-customer") || "";
-            });
-
-            // Bật/tắt số lượng khi tick món
-            const checkboxes = document.querySelectorAll(".menu-check");
-            checkboxes.forEach(cb => {
-                cb.addEventListener("change", function () {
-                    const row = this.closest("tr");
-                    const qtyInput = row.querySelector(".qty-input");
-                    qtyInput.disabled = !this.checked;
-                    if (!this.checked)
-                        qtyInput.value = 1;
-                    updateTotal();
+            <!-- === GIỮ NGUYÊN TOÀN BỘ LOGIC JS === -->
+            <script>
+                // Gán customerId theo reservation chọn
+                document.getElementById("reservationId").addEventListener("change", function () {
+                    const selected = this.options[this.selectedIndex];
+                    document.getElementById("customerId").value = selected.getAttribute("data-customer") || "";
                 });
-            });
 
-            // Tính lại khi thay đổi số lượng
-            const qtyInputs = document.querySelectorAll(".qty-input");
-            qtyInputs.forEach(input => {
-                input.addEventListener("input", updateTotal);
-            });
-
-            // Hàm tính tổng tiền
-            function updateTotal() {
-                let total = 0;
-                document.querySelectorAll("#menuTableBody tr").forEach(row => {
-                    const checkbox = row.querySelector(".menu-check");
-                    const qty = parseInt(row.querySelector(".qty-input").value || 0);
-                    const price = parseFloat(checkbox.getAttribute("data-price"));
-                    const subtotalCell = row.querySelector(".subtotal");
-
-                    if (checkbox.checked && qty > 0) {
-                        const subtotal = qty * price;
-                        subtotalCell.textContent = subtotal.toLocaleString('vi-VN');
-                        total += subtotal;
-                    } else {
-                        subtotalCell.textContent = "0";
-                    }
+                // Bật/tắt số lượng khi tick món
+                const checkboxes = document.querySelectorAll(".menu-check");
+                checkboxes.forEach(cb => {
+                    cb.addEventListener("change", function () {
+                        const row = this.closest("tr");
+                        const qtyInput = row.querySelector(".qty-input");
+                        qtyInput.disabled = !this.checked;
+                        if (!this.checked)
+                            qtyInput.value = 1;
+                        updateTotal();
+                    });
                 });
-                const display = total.toLocaleString('vi-VN');
-                document.getElementById("totalAmount").textContent = display;
-                document.getElementById("totalAmountHidden").value = total;
-            }
 
-            // Gọi lần đầu khi load
-            updateTotal();
-        </script>
+                // Tính lại khi thay đổi số lượng
+                const qtyInputs = document.querySelectorAll(".qty-input");
+                qtyInputs.forEach(input => {
+                    input.addEventListener("input", updateTotal);
+                });
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                // Hàm tính tổng tiền
+                function updateTotal() {
+                    let total = 0;
+                    document.querySelectorAll("#menuTableBody tr").forEach(row => {
+                        const checkbox = row.querySelector(".menu-check");
+                        const qty = parseInt(row.querySelector(".qty-input").value || 0);
+                        const price = parseFloat(checkbox.getAttribute("data-price"));
+                        const subtotalCell = row.querySelector(".subtotal");
+
+                        if (checkbox.checked && qty > 0) {
+                            const subtotal = qty * price;
+                            subtotalCell.textContent = subtotal.toLocaleString('vi-VN');
+                            total += subtotal;
+                        } else {
+                            subtotalCell.textContent = "0";
+                        }
+                    });
+                    const display = total.toLocaleString('vi-VN');
+                    document.getElementById("totalAmount").textContent = display;
+                    document.getElementById("totalAmountHidden").value = total;
+                }
+
+                // Gọi lần đầu khi load
+                updateTotal();
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

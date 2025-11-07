@@ -392,7 +392,7 @@
                                             ${o.status}
                                         </span>
                                     </td>
-                                    <td class="text-center">${o.createdAt}</td>
+                                    <td class="text-center">${o.createdAtFormatted}</td>
                                     <td>
                                         <div class="action-btns">
                                             <!-- Form đổi trạng thái -->
