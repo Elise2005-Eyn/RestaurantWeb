@@ -78,6 +78,12 @@ public class AuthController extends HttpServlet {
             req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
             return;
         }
+        
+        if (userDAO.emailExists(email)) {
+            req.setAttribute("error", "Email đã tồn tại, vui lòng thử lại");
+            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            return;
+        }
 
         if (!phone.matches("^(0[1-9][0-9]{8})$")) {
             req.setAttribute("error", "Số điện thoại không hợp lệ (phải là 10 số, bắt đầu bằng 0)!");

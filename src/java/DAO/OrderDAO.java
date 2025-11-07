@@ -4,6 +4,8 @@ import Models.Order;
 import Models.OrderItem;
 import Utils.DBContext;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class OrderDAO extends DBContext {
@@ -93,7 +95,11 @@ public class OrderDAO extends DBContext {
                     o.setReservationId(rs.getLong("reservation_id"));
                     o.setTableId(rs.getInt("table_id"));
                     o.setCustomerName(rs.getString("customer_name")); // ✅ thêm trường mới
-                    o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                    LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                    o.setCreatedAt(createdAt);
+                    o.setCreatedAtFormatted(createdAt.format(
+                            DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")
+                    ));
                     o.setAmount(rs.getDouble("amount"));
                     o.setStatus(rs.getString("status"));
                     o.setOrderType(rs.getString("order_type"));
@@ -113,7 +119,47 @@ public class OrderDAO extends DBContext {
         String sql = """
         SELECT o.*, c.full_name AS customer_name
         FROM Orders o
-        LEFT JOIN Customer c ON o.customer_id = c.customer_id
+        LEFT JOIN Customer c ON o.customer_id = c.customer_idpublic List<Order> getOrdersPaginated(int page, int pageSize) {
+                List<Order> list = new ArrayList<>();
+                String sql = \"""
+                SELECT o.*, c.full_name AS customer_name
+                FROM Orders o
+                LEFT JOIN Customer c ON o.customer_id = c.customer_id
+                ORDER BY o.created_at DESC
+                OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+            \""";
+        
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setInt(1, (page - 1) * pageSize);
+                    ps.setInt(2, pageSize);
+                    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+        
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            Order o = new Order();
+                            o.setOrderId(rs.getLong("order_id"));
+                            o.setReservationId(rs.getLong("reservation_id"));
+                            o.setTableId(rs.getInt("table_id"));
+                            o.setCustomerName(rs.getString("customer_name")); // ✅ thêm trường mới
+                            LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                            o.setCreatedAt(createdAt);
+                            o.setCreatedAtFormatted(createdAt.format(
+                                    DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")
+                            ));
+                            //o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                            o.setAmount(rs.getDouble("amount"));
+                            o.setStatus(rs.getString("status"));
+                            o.setOrderType(rs.getString("order_type"));
+                            o.setNote(rs.getString("note"));
+                            list.add(o);
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.out.println("[OrderDAO] Lỗi getOrdersPaginated: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                return list;
+            }
         WHERE o.status = ?
         ORDER BY o.created_at DESC
         OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
@@ -166,30 +212,7 @@ public class OrderDAO extends DBContext {
     /**
      * Lấy chi tiết 1 đơn hàng theo ID
      */
-    public Models.Order getOrderById(long orderId) {
-        String sql = "SELECT * FROM Orders WHERE order_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, orderId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Models.Order o = new Models.Order();
-                    o.setOrderId(rs.getLong("order_id"));
-                    o.setReservationId(rs.getObject("reservation_id", Long.class));
-                    o.setTableId(rs.getObject("table_id", Integer.class));
-                    o.setCustomerId((UUID) rs.getObject("customer_id"));
-                    o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                    o.setAmount(rs.getDouble("amount"));
-                    o.setStatus(rs.getString("status"));
-                    o.setOrderType(rs.getString("order_type"));
-                    o.setNote(rs.getString("note"));
-                    return o;
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("[OrderDAO] ❌ Lỗi getOrderById: " + e.getMessage());
-        }
-        return null;
-    }
+    
 
     /**
      * Cập nhật trạng thái đơn hàng
