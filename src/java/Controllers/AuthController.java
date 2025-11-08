@@ -17,7 +17,9 @@ public class AuthController extends HttpServlet {
             throws ServletException, IOException {
 
         String action = req.getParameter("action");
-        if (action == null) action = "login";
+        if (action == null) {
+            action = "login";
+        }
 
         switch (action) {
             case "register":
@@ -26,7 +28,9 @@ public class AuthController extends HttpServlet {
 
             case "logout":
                 HttpSession session = req.getSession(false);
-                if (session != null) session.invalidate();
+                if (session != null) {
+                    session.invalidate();
+                }
                 resp.sendRedirect(req.getContextPath() + "/home");
                 break;
 
@@ -50,7 +54,6 @@ public class AuthController extends HttpServlet {
         }
     }
 
-    // ====================== XỬ LÝ ĐĂNG KÝ ======================
     private void handleRegister(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -61,12 +64,11 @@ public class AuthController extends HttpServlet {
         String phone = req.getParameter("phone");
         String agree = req.getParameter("agree");
 
-        // Kiểm tra dữ liệu đầu vào
-        if (username == null || username.isBlank() ||
-            email == null || email.isBlank() ||
-            password == null || password.isBlank() ||
-            confirmPassword == null || confirmPassword.isBlank() ||
-            phone == null || phone.isBlank()) {
+        if (username == null || username.isBlank()
+                || email == null || email.isBlank()
+                || password == null || password.isBlank()
+                || confirmPassword == null || confirmPassword.isBlank()
+                || phone == null || phone.isBlank()) {
 
             req.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
             req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
@@ -75,6 +77,12 @@ public class AuthController extends HttpServlet {
 
         if (!email.matches(".+@.+\\..+")) {
             req.setAttribute("error", "Email không hợp lệ!");
+            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            return;
+        }
+
+        if (userDAO.isEmailExists(email)) {
+            req.setAttribute("error", "Email này đã được đăng ký, vui lòng dùng email khác!");
             req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
             return;
         }
@@ -97,7 +105,6 @@ public class AuthController extends HttpServlet {
             return;
         }
 
-        // ✅ Tạo user mới
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
@@ -105,7 +112,7 @@ public class AuthController extends HttpServlet {
         user.setTelephone(phone);
         user.setRoleId(3); // 3 = customer
         user.setActived(true);
-        user.setPhotoUrl("uploads/default-avatar.png"); // thêm ảnh mặc định
+        user.setPhotoUrl("uploads/default-avatar.png"); 
 
         boolean success = userDAO.register(user);
 
@@ -118,7 +125,6 @@ public class AuthController extends HttpServlet {
         }
     }
 
-    // ====================== XỬ LÝ ĐĂNG NHẬP ======================
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -128,7 +134,6 @@ public class AuthController extends HttpServlet {
         User user = userDAO.login(email, password);
 
         if (user != null) {
-            // Lấy thêm ảnh, tên... nếu cần
             User fullUser = userDAO.getUserById(user.getId());
 
             HttpSession session = req.getSession();
@@ -159,10 +164,14 @@ public class AuthController extends HttpServlet {
 
     private String getRoleName(int roleId) {
         switch (roleId) {
-            case 1: return "admin";
-            case 2: return "staff";
-            case 3: return "customer";
-            default: return "guest";
+            case 1:
+                return "admin";
+            case 2:
+                return "staff";
+            case 3:
+                return "customer";
+            default:
+                return "guest";
         }
     }
 }

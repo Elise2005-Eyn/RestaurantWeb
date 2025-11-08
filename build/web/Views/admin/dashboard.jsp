@@ -114,6 +114,9 @@
 </head>
 
 <body>
+    
+    <%@ include file="/Views/components/admin_header.jsp" %>
+
 
     <h1><i class="fa-solid fa-chart-pie"></i> Tổng quan hệ thống</h1>
 

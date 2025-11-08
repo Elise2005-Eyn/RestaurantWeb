@@ -7,6 +7,21 @@ import java.sql.*;
 
 public class UserDAO extends DBContext {
 
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Có ít nhất 1 user dùng email này
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // Kiểm tra đăng nhập
     public User login(String email, String password) {
         String sql = "SELECT * FROM Users WHERE email = ? AND password = ? AND is_actived = 1";

@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -36,7 +37,6 @@ public class BookTableController extends HttpServlet {
 
         List<MenuItem> menuList = menuDAO.getAllMenuItems();
         req.setAttribute("menuList", menuList);
-
         req.getRequestDispatcher("/Views/reservation/book-table.jsp").forward(req, resp);
     }
 
@@ -45,7 +45,6 @@ public class BookTableController extends HttpServlet {
             throws ServletException, IOException {
 
         req.setCharacterEncoding("UTF-8");
-
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
@@ -70,6 +69,16 @@ public class BookTableController extends HttpServlet {
                 return;
             }
 
+            // 🔹 Kiểm tra không được đặt bàn trong quá khứ
+            LocalDate bookingDate = LocalDate.parse(date);
+            LocalDate today = LocalDate.now();
+            if (bookingDate.isBefore(today)) {
+                req.setAttribute("error", "⛔ Không thể đặt bàn vào ngày trong quá khứ. Vui lòng chọn ngày từ hôm nay trở đi.");
+                reloadForm(req, resp);
+                return;
+            }
+
+            // 🔹 Giờ mở cửa - đóng cửa
             LocalTime bookingTime = LocalTime.parse(time);
             LocalTime openTime = LocalTime.of(8, 0);
             LocalTime closeTime = LocalTime.of(22, 0);
@@ -104,7 +113,7 @@ public class BookTableController extends HttpServlet {
                 return;
             }
 
-            // 🔹 BR-BK-04: Kiểm tra trùng thời gian đặt bàn
+            // 🔹 Kiểm tra trùng thời gian đặt bàn
             if (reservationDAO.hasDuplicateBooking(customerId, date, bookingTime, endTime)) {
                 req.setAttribute("error", "⚠️ Bạn đã có một đặt bàn trùng thời gian trong ngày này. Vui lòng chọn khung giờ khác.");
                 reloadForm(req, resp);

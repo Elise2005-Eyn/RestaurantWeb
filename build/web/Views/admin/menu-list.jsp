@@ -85,8 +85,7 @@
 </head>
 <body>
 
-    <%@ include file="layout/admin-header.jsp" %>
-    <%@ include file="layout/admin-sidebar.jsp" %>
+
 
     <main>
         <h2>📋 Danh sách món ăn</h2>
@@ -133,7 +132,7 @@
         </div>
     </main>
 
-    <%@ include file="layout/admin-footer.jsp" %>
+ 
 
 </body>
 </html>
