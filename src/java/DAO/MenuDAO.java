@@ -2,6 +2,7 @@ package DAO;
 
 import Models.MenuItem;
 import Utils.DBContext;
+import java.math.BigDecimal;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -283,6 +284,81 @@ public class MenuDAO extends DBContext {
             System.out.println("[MenuDAO] Lỗi getMenuStatusCount: " + e.getMessage());
         }
         return map;
+    }
+
+    public Map<Integer, String> getCategoryMap() {
+        Map<Integer, String> map = new LinkedHashMap<>();
+        String sql = "SELECT id, name FROM MenuCategory ORDER BY id";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                map.put(rs.getInt("id"), rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("[MenuCategoryDAO] Lỗi khi lấy danh mục: " + e.getMessage());
+        }
+        return map;
+    }
+
+    /**
+     * Tìm kiếm món ăn theo tên, khoảng giá, danh mục
+     */
+    public List<MenuItem> searchMenuItems(String keyword, BigDecimal minPrice, BigDecimal maxPrice, Integer categoryId) {
+        List<MenuItem> menuList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("""
+            SELECT id, name, description, price, discount_percent, category_id, inventory, image, is_active, code
+            FROM MenuItem
+            WHERE is_active = 1
+        """);
+
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND name LIKE ?");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if (minPrice != null) {
+            sql.append(" AND price >= ?");
+            params.add(minPrice);
+        }
+
+        if (maxPrice != null) {
+            sql.append(" AND price <= ?");
+            params.add(maxPrice);
+        }
+
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND category_id = ?");
+            params.add(categoryId);
+        }
+
+        sql.append(" ORDER BY created_at DESC");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                MenuItem item = new MenuItem();
+                item.setId(rs.getInt("id"));
+                item.setName(rs.getString("name"));
+                item.setDescription(rs.getString("description"));
+                item.setPrice(rs.getBigDecimal("price"));
+                item.setDiscountPercent(rs.getBigDecimal("discount_percent"));
+                item.setCategoryId(rs.getInt("category_id"));
+                item.setInventory(rs.getObject("inventory") != null ? rs.getInt("inventory") : null);
+                item.setImage(rs.getString("image"));
+                item.setActive(rs.getBoolean("is_active"));
+                item.setCode(rs.getString("code"));
+                menuList.add(item);
+            }
+        } catch (SQLException e) {
+            System.out.println("[MenuDAO] Lỗi khi tìm kiếm món ăn: " + e.getMessage());
+        }
+
+        return menuList;
     }
 
 }
