@@ -16,14 +16,15 @@ public class Order {
     private String note;
     private String customerName;
 
-public String getCustomerName() {
-    return customerName;
-}
+    private String createdAtFormatted; //dùng cho format lại định dạng ngày
 
-public void setCustomerName(String customerName) {
-    this.customerName = customerName;
-}
+    public String getCustomerName() {
+        return customerName;
+    }
 
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public long getOrderId() {
         return orderId;
@@ -96,4 +97,14 @@ public void setCustomerName(String customerName) {
     public void setNote(String note) {
         this.note = note;
     }
+
+    public String getCreatedAtFormatted() {
+        return createdAtFormatted;
+    }
+
+    public void setCreatedAtFormatted(String createdAtFormatted) {
+        this.createdAtFormatted = createdAtFormatted;
+    }
+    
+    
 }

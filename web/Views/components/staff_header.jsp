@@ -3,46 +3,82 @@
 
 <!-- ================= STAFF HEADER ================= -->
 <nav class="navbar navbar-expand-lg"
-     style="background: #fff; border-radius: 18px; box-shadow: 0 4px 15px rgba(94, 59, 183, 0.08);
-     padding: 0.8rem 1.5rem; margin: 20px 0 40px; border: 1px solid #e2e8f0;">
+     style="background: #222222; 
+            border-radius: 18px; 
+            padding: 1rem 1.5rem; 
+            margin: 20px 0 40px; 
+            border: 1px solid #444444;">
     <div class="container-fluid">
 
         <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-primary"
-           href="#">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold"
+           href="#"
+           style="color: #E0B841;
+           font-family: 'Oswald', sans-serif;
+           font-size: 1.45rem;
+           text-transform: uppercase;
+           letter-spacing: 1.5px;
+           transition: color 0.3s ease;"
+           >
             <i class="fas fa-utensils"></i>
             Nhà Hàng
         </a>
 
         <!-- Toggle for mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#staffNav">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#staffNav">
+            <span class="navbar-toggler-icon"
+                  style="filter: brightness(0) invert(1);"></span>
         </button>
 
         <!-- Menu -->
         <div class="collapse navbar-collapse justify-content-center" id="staffNav">
-            <ul class="navbar-nav gap-3">
-                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/staff/dashboard">
-                        Staff Dashboard
-                    </a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/staff/table-order">Quản lý Đặt bàn</a></li>
+            <ul class="navbar-nav gap-4" style="font-weight: 600;">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/staff/orders">
-                        Quản lý Đơn hàng
+                    <a class="nav-link position-relative text-white" 
+                       href="${pageContext.request.contextPath}/staff/dashboard">
+                        Staff Dashboard
+                        <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
+                              style="transition: opacity 0.3s ease; height: 2px;"></span>
                     </a>
                 </li>
-
-                <li class="nav-item"><a class="nav-link" href="#">Khu vực bàn</a></li>
+                <li class="nav-item">
+                    <a class="nav-link position-relative text-white" 
+                       href="${pageContext.request.contextPath}/staff/reservation_list">
+                        Quản lý Đặt bàn
+                        <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
+                              style="transition: opacity 0.3s ease; height: 2px;"></span>
+                    </a>
+                </li>
+                <li class="nav-item"><a class="nav-link position-relative text-white" 
+                                        href="${pageContext.request.contextPath}/staff/tables">Khu vực bàn
+                        <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
+                              style="transition: opacity 0.3s ease; height: 2px;"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link position-relative text-white" 
+                       href="${pageContext.request.contextPath}/staff/orders">
+                        Quản lý Đơn hàng
+                        <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
+                              style="transition: opacity 0.3s ease; height: 2px;"></span>
+                    </a>
+                </li>               
             </ul>
         </div>
 
         <!-- User info -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-3">
             <img src="${sessionScope.user.photoUrl != null ? sessionScope.user.photoUrl : '/images/default-avatar.png'}"
                  alt="Staff Avatar"
-                 style="width:40px; height:40px; border-radius:50%; border:2px solid #d9c8ff; object-fit:cover;">
+                 style="width:44px;
+                 height:44px;
+                 border-radius:50%; 
+                 border:2.5px solid #E0B841; 
+                 object-fit:cover;
+                 box-shadow: 0 0 20px rgba(224, 184, 65, 0.4);">
             <span class="fw-semibold text-dark">${sessionScope.user.username}</span>
 
             <!-- Dropdown -->
