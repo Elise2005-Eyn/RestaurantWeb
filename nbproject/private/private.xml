@@ -2,13 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/web/Views/staff/order_list.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/src/java/DAO/OrderDAO.java</file>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/src/java/Utils/DBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/web/Views/staff/order_add.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/src/java/Controllers/staff/StaffOrderController.java</file>
-            <file>file:/C:/Users/Admin/Documents/FU/FALL25/SWP391/New%20folder/Staff%20manage%20orders/restaurant-swp/web/Views/staff/order_detail.jsp</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
