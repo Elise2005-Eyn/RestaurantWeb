@@ -4,7 +4,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Quản lý đơn hàng - Staff</title>
+        <title>Quản lý đặt bàn - Staff</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style>
@@ -171,7 +171,7 @@
                 border: 1.5px solid #2196F3;
             }
 
-            .status-IN_PROGRESS {
+            .status-CONFIRMED {
                 background: rgba(25, 135, 84, 0.2);
                 color: #198754;
                 border: 1px solid #198754;
@@ -343,22 +343,22 @@
         <div class="container">
             <!-- Tiêu đề + Nút thêm -->
             <div class="page-title">
-                <h3><i class="fas fa-receipt"></i> Quản lý Đơn hàng</h3>
-                <a href="${pageContext.request.contextPath}/staff/orders?action=add" class="btn btn-add">
-                    <i class="fas fa-plus-circle"></i> Thêm Đơn hàng
+                <h3><i class="fas fa-receipt"></i> Quản lý Đặt bàn</h3>
+                <a href="${pageContext.request.contextPath}/staff/reservation_list?action=add" class="btn btn-add">
+                    <i class="fas fa-plus-circle"></i> Đặt bàn
                 </a>
             </div>
 
             <!-- Bộ lọc trạng thái -->
-            <form method="get" action="${pageContext.request.contextPath}/staff/orders"
+            <form method="get" action="${pageContext.request.contextPath}/staff/reservation_list"
                   class="filter-form">
                 <label for="status" class="fw-semibold text-secondary">Lọc theo trạng thái:</label>
                 <select name="status" id="status" class="form-select w-auto shadow-sm border-0"
                         onchange="this.form.submit()">
                     <option value="">Tất cả</option>
                     <option value="PENDING" ${currentStatus == 'PENDING' ? 'selected' : ''}>Chờ xử lý</option>
-                    <option value="IN_PROGRESS" ${currentStatus == 'IN_PROGRESS' ? 'selected' : ''}>Đang làm</option>
-                    <option value="COMPLETED" ${currentStatus == 'COMPLETED' ? 'selected' : ''}>Hoàn tất</option>
+                    <option value="CONFIRMED" ${currentStatus == 'CONFIRMED' ? 'selected' : ''}>Đã duyệt</option>
+                    <option value="DONE" ${currentStatus == 'DONE' ? 'selected' : ''}>Hoàn tất</option>
                     <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
                 </select>
             </form>
@@ -369,58 +369,33 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="text-center text-secondary fw-semibold">
                             <tr>
-                                <th style="width: 8%;">Mã Đơn</th>
-                                <th style="width: 12%;">Khách hàng</th>
-                                <th style="width: 5%;">Bàn</th>
-                                <th style="width: 10%;">Số tiền (₫)</th>
-                                <th style="width: 10%;">Loại</th>                                
-                                <th style="width: 20%;">Thời gian tạo</th>
+                                <th style="width: 10%;">Mã Đặt bàn</th>
+                                <th style="width: 10%;">Khách hàng</th>
+                                <th style="width: 20%;">Thời gian đặt</th>
+                                <th style="width: 10%;">Số khách</th>
+                                <th style="width: 15%;">Note</th>
                                 <th style="width: 10%;">Trạng thái</th>
                                 <th style="width: 20%;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="o" items="${orders}">
-                                <tr id="order-${o.orderId}">
-                                    <td class="text-center fw-semibold text-secondary">${o.orderId}</td>
-                                    <td class="text-center fw-semibold text-secondary">${o.customerName}</td>
-                                    <td class="text-center fw-semibold text-secondary">${o.tableId}</td>
-                                    <td class="text-center fw-semibold text-secondary">${o.amount}</td>
-                                    <td class="text-center fw-semibold text-secondary">${o.orderType}</td>                                   
-                                    <td class="text-center fw-semibold text-secondary">${o.createdAtFormatted}</td>
-                                    <td class="text-center fw-semibold text-secondary">
-                                        <span class="status-badge status-${o.status}" id="status-${o.orderId}">
-                                            ${o.status}
+                            <c:forEach var="r" items="${reservations}">
+                                <tr id="order-${r.reservationId}">
+                                    <td class="text-center fw-semibold text-secondary">${r.reservationId}</td>
+                                    <td>${r.customerName}</td>
+                                    <td class="text-center">${r.reservedAt}</td>
+                                    <td class="fw-semibold text-success text-center">${r.guestCount}</td>
+                                    <td class="text-center">${r.note}</td>
+                                    <td class="text-center">
+                                        <span class="status-badge status-${r.status}" id="status-${r.reservationId}">
+                                            ${r.status}
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <!-- Form đổi trạng thái -->
-                                            <form action="${pageContext.request.contextPath}/staff/orders" method="get" class="d-flex align-items-center">
-                                                <input type="hidden" name="action" value="changeStatus">
-                                                <input type="hidden" name="id" value="${o.orderId}">
-                                                <select name="status" class="form-select form-select-sm w-auto me-1" required>
-                                                    <option disabled selected>Đổi trạng thái</option>
-                                                    <option value="IN_PROGRESS">Đang làm</option>
-                                                    <option value="COMPLETED">Hoàn tất</option>
-                                                    <option value="CANCELLED">Đã hủy</option>
-                                                </select>
-                                                <button type="submit" class="btn-sync" title="Cập nhật trạng thái">
-                                                    <i class="fas fa-sync-alt"></i>
-                                                </button>
-                                            </form>
-
-                                            <!-- Nút xem chi tiết -->
-                                            <a href="${pageContext.request.contextPath}/staff/orders?action=detail&id=${o.orderId}"
-                                               class="btn-view" title="Xem chi tiết">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                             </c:forEach>
 
-                            <c:if test="${empty orders}">
+                            <c:if test="${empty reservations}">
                                 <tr>
                                     <td colspan="8" class="text-center text-muted py-3">
                                         <i class="fas fa-box-open me-1"></i> Không có đơn hàng nào.
