@@ -6,11 +6,20 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/auth")
 public class AuthController extends HttpServlet {
 
     private final UserDAO userDAO = new UserDAO();
+
+    // ====== Regex dùng chung ======
+    // Tên chỉ chữ (có dấu) + khoảng trắng, 2–50.
+    private static final String NAME_REGEX = "^[A-Za-zÀ-Ỹà-ỹĐđ\\s]{2,50}$";
+    // Email đơn giản
+    private static final String EMAIL_REGEX = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+    // SĐT: 0 + 9 số
+    private static final String PHONE_REGEX = "^0\\d{9}$";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -40,7 +49,7 @@ public class AuthController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        req.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
         String action = req.getParameter("action");
 
         if ("register".equals(action)) {
@@ -54,52 +63,63 @@ public class AuthController extends HttpServlet {
     private void handleRegister(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String username = req.getParameter("username");
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        String confirmPassword = req.getParameter("confirmPassword");
-        String phone = req.getParameter("phone");
+        // Lấy & chuẩn hoá dữ liệu
+        String username = trimOrEmpty(req.getParameter("username"));
+        String email = trimOrEmpty(req.getParameter("email")).toLowerCase();
+        String password = safe(req.getParameter("password"));
+        String confirmPassword = safe(req.getParameter("confirmPassword"));
+        String phone = trimOrEmpty(req.getParameter("phone"));
         String agree = req.getParameter("agree");
 
-        // Kiểm tra dữ liệu đầu vào
-        if (username == null || username.isBlank() ||
-            email == null || email.isBlank() ||
-            password == null || password.isBlank() ||
-            confirmPassword == null || confirmPassword.isBlank() ||
-            phone == null || phone.isBlank()) {
+        // Giữ lại dữ liệu cho form
+        keepFormData(req, username, email, phone);
 
-            req.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+        // ---- Validate bắt buộc ----
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty()
+                || confirmPassword.isEmpty() || phone.isEmpty()) {
+            fail(req, resp, "Vui lòng điền đầy đủ thông tin!");
             return;
         }
 
-        if (!email.matches(".+@.+\\..+")) {
-            req.setAttribute("error", "Email không hợp lệ!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+        // ---- Validate tên: chỉ chữ & khoảng trắng, không số/ký tự đặc biệt ----
+        if (!username.matches(NAME_REGEX)) {
+            fail(req, resp, "Họ và tên chỉ được chứa chữ cái (có dấu) và khoảng trắng, 2–50 ký tự; không chứa số hoặc ký tự đặc biệt.");
             return;
         }
-        
+
+        // ---- Validate email ----
+        if (!email.matches(EMAIL_REGEX)) {
+            fail(req, resp, "Email không hợp lệ!");
+            return;
+        }
+
+        // ---- Validate tồn tại email ----
         if (userDAO.emailExists(email)) {
-            req.setAttribute("error", "Email đã tồn tại, vui lòng thử lại");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            fail(req, resp, "Email đã tồn tại, vui lòng thử email khác.");
             return;
         }
 
-        if (!phone.matches("^(0[1-9][0-9]{8})$")) {
-            req.setAttribute("error", "Số điện thoại không hợp lệ (phải là 10 số, bắt đầu bằng 0)!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+        // ---- Validate SĐT ----
+        if (!phone.matches(PHONE_REGEX)) {
+            fail(req, resp, "Số điện thoại không hợp lệ (phải gồm 10 số và bắt đầu bằng 0).");
             return;
         }
 
+        // ---- Validate mật khẩu độ dài 6–20 ----
+        if (password.length() < 6 || password.length() > 20) {
+            fail(req, resp, "Mật khẩu phải từ 6 đến 20 ký tự.");
+            return;
+        }
+
+        // ---- So khớp mật khẩu ----
         if (!password.equals(confirmPassword)) {
-            req.setAttribute("error", "Mật khẩu nhập lại không khớp!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            fail(req, resp, "Mật khẩu nhập lại không khớp!");
             return;
         }
 
+        // ---- Đồng ý điều khoản ----
         if (agree == null) {
-            req.setAttribute("error", "Vui lòng đồng ý với điều khoản sử dụng!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            fail(req, resp, "Vui lòng đồng ý với điều khoản sử dụng!");
             return;
         }
 
@@ -107,11 +127,12 @@ public class AuthController extends HttpServlet {
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
+        // Lưu ý: Nên băm mật khẩu (BCrypt/Argon2). Ở đây giữ nguyên theo project gốc.
         user.setPassword(password);
         user.setTelephone(phone);
-        user.setRoleId(3); // 3 = customer
+        user.setRoleId(3);            // 3 = customer
         user.setActived(true);
-        user.setPhotoUrl("uploads/default-avatar.png"); // thêm ảnh mặc định
+        user.setPhotoUrl("uploads/default-avatar.png");
 
         boolean success = userDAO.register(user);
 
@@ -119,8 +140,7 @@ public class AuthController extends HttpServlet {
             req.setAttribute("success", "🎉 Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.");
             req.getRequestDispatcher("/Views/auth/login.jsp").forward(req, resp);
         } else {
-            req.setAttribute("error", "❌ Đăng ký thất bại, vui lòng thử lại!");
-            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            fail(req, resp, "❌ Đăng ký thất bại, vui lòng thử lại!");
         }
     }
 
@@ -128,13 +148,12 @@ public class AuthController extends HttpServlet {
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+        String email = trimOrEmpty(req.getParameter("email")).toLowerCase();
+        String password = safe(req.getParameter("password"));
 
         User user = userDAO.login(email, password);
 
         if (user != null) {
-            // Lấy thêm ảnh, tên... nếu cần
             User fullUser = userDAO.getUserById(user.getId());
 
             HttpSession session = req.getSession();
@@ -143,18 +162,10 @@ public class AuthController extends HttpServlet {
             session.setAttribute("role", getRoleName(fullUser.getRoleId()));
 
             switch (fullUser.getRoleId()) {
-                case 1: // Admin
-                    resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
-                    break;
-                case 2: // Staff
-                    resp.sendRedirect(req.getContextPath() + "/staff/dashboard");
-                    break;
-                case 3: // Customer
-                    resp.sendRedirect(req.getContextPath() + "/home");
-                    break;
-                default:
-                    resp.sendRedirect(req.getContextPath() + "/home");
-                    break;
+                case 1: resp.sendRedirect(req.getContextPath() + "/admin/dashboard"); break;
+                case 2: resp.sendRedirect(req.getContextPath() + "/staff/dashboard"); break;
+                case 3: resp.sendRedirect(req.getContextPath() + "/home"); break;
+                default: resp.sendRedirect(req.getContextPath() + "/home"); break;
             }
 
         } else {
@@ -163,6 +174,23 @@ public class AuthController extends HttpServlet {
         }
     }
 
+    // ====================== Helpers ======================
+    private static String trimOrEmpty(String s) {
+        return s == null ? "" : s.trim();
+    }
+    private static String safe(String s) {
+        return s == null ? "" : s;
+    }
+    private static void keepFormData(HttpServletRequest req, String username, String email, String phone) {
+        req.setAttribute("username", username);
+        req.setAttribute("email", email);
+        req.setAttribute("phone", phone);
+    }
+    private void fail(HttpServletRequest req, HttpServletResponse resp, String msg)
+            throws ServletException, IOException {
+        req.setAttribute("error", msg);
+        req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+    }
     private String getRoleName(int roleId) {
         switch (roleId) {
             case 1: return "admin";
