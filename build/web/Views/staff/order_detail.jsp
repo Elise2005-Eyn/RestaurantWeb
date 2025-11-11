@@ -242,7 +242,7 @@
                     <p><strong>Bàn:</strong> ${order.table_code}</p>
                     <p><strong>Trạng thái:</strong> ${order.status}</p>
                     <p><strong>Loại đơn hàng:</strong> ${order.order_type}</p>
-                    <p><strong>Ngày tạo:</strong> ${order.createdAtFormatted}</p>
+                    <p><strong>Ngày tạo:</strong> ${order.created_at_formatted}</p>
                     <p><strong>Ghi chú:</strong> ${order.note}</p>
                     <hr style="border-color: var(--color-gray-medium); margin: 2rem 0;">
 
