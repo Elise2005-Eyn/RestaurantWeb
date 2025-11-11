@@ -37,8 +37,15 @@
                 text-transform: uppercase;
                 letter-spacing: 1px;
             }
+            .admin-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+            }
 
-            /* --- Thống kê nhỏ --- */
+            /* ======== THỐNG KÊ CHÍNH ======== */
             .stats-container {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -50,7 +57,7 @@
                 background: var(--color-gray-dark);
                 border-radius: 12px;
                 border: 1px solid var(--color-gray-medium);
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.4);
                 padding: 25px;
                 text-align: center;
                 transition: all 0.3s ease;
@@ -58,34 +65,35 @@
 
             .stat-box:hover {
                 transform: translateY(-6px);
-                box-shadow: 0 6px 15px rgba(224, 184, 65, 0.2);
                 border-color: var(--color-gold);
+                box-shadow: 0 8px 20px rgba(224, 184, 65, 0.2);
             }
 
             .stat-icon {
-                font-size: 36px;
+                font-size: 32px;
                 color: var(--color-gold);
                 margin-bottom: 10px;
             }
 
-            .stat-box h3 {
-                font-size: 1.1em;
+            .stat-box div {
                 color: var(--color-white);
-                margin-bottom: 8px;
+                font-weight: 600;
+                font-size: 1em;
             }
 
-            .stat-box p {
-                font-size: 1.3em;
+            .stat-value {
                 color: var(--color-gold);
+                font-size: 1.4em;
                 font-weight: 700;
+                margin-top: 5px;
             }
 
-            /* --- Khu vực biểu đồ --- */
+            /* ======== BIỂU ĐỒ DOANH THU ======== */
             .chart-section {
                 background: var(--color-gray-dark);
                 border-radius: 12px;
                 border: 1px solid var(--color-gray-medium);
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.4);
                 padding: 25px 30px;
                 margin: 0 auto 50px;
                 width: 90%;
@@ -103,7 +111,7 @@
                 width: 100%;
             }
 
-            /* --- Biểu đồ tròn --- */
+            /* ======== BIỂU ĐỒ TRÒN ======== */
             .pie-container {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -115,16 +123,16 @@
                 background: var(--color-gray-dark);
                 border-radius: 12px;
                 border: 1px solid var(--color-gray-medium);
-                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.4);
                 padding: 25px;
                 text-align: center;
-                transition: transform 0.2s, border-color 0.3s;
+                transition: transform 0.3s, border-color 0.3s;
             }
 
             .pie-box:hover {
-                transform: translateY(-4px);
+                transform: translateY(-5px);
                 border-color: var(--color-gold);
-                box-shadow: 0 6px 15px rgba(224, 184, 65, 0.15);
+                box-shadow: 0 8px 20px rgba(224, 184, 65, 0.25);
             }
 
             .pie-box h3 {
@@ -147,11 +155,52 @@
                 text-align: center;
                 padding: 30px 0;
             }
+
+            /* ======== HEADER ADMIN (INCLUDE) ======== */
+            header, .admin-header {
+                background-color: var(--color-gray-dark);
+                color: var(--color-white);
+                border-bottom: 2px solid var(--color-gold);
+                padding: 15px 40px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .admin-header .logo {
+                font-size: 1.8em;
+                font-family: 'Oswald', sans-serif;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--color-white);
+            }
+
+            .admin-header .logo span {
+                color: var(--color-gold);
+            }
+
+            .admin-nav a {
+                text-decoration: none;
+                color: var(--color-white);
+                margin-left: 25px;
+                font-family: 'Oswald', sans-serif;
+                text-transform: uppercase;
+                font-size: 1em;
+                transition: color 0.2s;
+            }
+
+            .admin-nav a:hover {
+                color: var(--color-gold);
+            }
         </style>
 
     </head>
 
     <body>
+
+        <%@ include file="/Views/components/admin_header.jsp" %>
+
 
         <h1><i class="fa-solid fa-chart-pie"></i> Tổng quan hệ thống</h1>
 
@@ -281,5 +330,7 @@
             createPie("reservationPie", ${reservationStatusLabels}, ${reservationStatusValues},
                     ['#29B6F6', '#66BB6A', '#FF7043', '#AB47BC', '#FFEE58']);
         </script>
+
+
     </body>
 </html>
