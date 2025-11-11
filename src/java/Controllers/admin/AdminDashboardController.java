@@ -17,11 +17,17 @@ public class AdminDashboardController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+<<<<<<< HEAD
         // 🔒 Kiểm tra đăng nhập và quyền admin
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("role") == null ||
                 !"admin".equalsIgnoreCase((String) session.getAttribute("role"))) {
             // ❗ Nếu chưa đăng nhập hoặc không phải admin → chuyển hướng về trang login
+=======
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("role") == null ||
+                !"admin".equalsIgnoreCase((String) session.getAttribute("role"))) {
+>>>>>>> LeThuUyen-Staff
             resp.sendRedirect(req.getContextPath() + "/auth?action=login");
             return;
         }
@@ -41,19 +47,28 @@ public class AdminDashboardController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+<<<<<<< HEAD
             // 📦 Khởi tạo DAO
+=======
+>>>>>>> LeThuUyen-Staff
             MenuDAO menuDAO = new MenuDAO();
             OrderDAO orderDAO = new OrderDAO();
             CustomerDAO customerDAO = new CustomerDAO();
             ReservationDAO reservationDAO = new ReservationDAO();
 
+<<<<<<< HEAD
             // 🧮 Lấy dữ liệu tổng hợp
+=======
+>>>>>>> LeThuUyen-Staff
             int totalMenuItems = menuDAO.getTotalActiveMenuItems();
             int totalOrders = orderDAO.getTotalOrders();
             int totalCustomers = customerDAO.getTotalCustomers();
             int totalReservations = reservationDAO.getTotalReservations();
 
+<<<<<<< HEAD
             // 💰 Lấy doanh thu theo tháng
+=======
+>>>>>>> LeThuUyen-Staff
             Map<String, Double> revenueByMonth = orderDAO.getMonthlyRevenue();
 
             List<String> labels = new ArrayList<>(revenueByMonth.keySet());
@@ -64,13 +79,19 @@ public class AdminDashboardController extends HttpServlet {
                 values = Arrays.asList(0.0);
             }
 
+<<<<<<< HEAD
             // 🧩 Lấy dữ liệu trạng thái (cho biểu đồ tròn)
+=======
+>>>>>>> LeThuUyen-Staff
             Map<String, Integer> menuStatus = safeMap(menuDAO.getMenuStatusCount());
             Map<String, Integer> orderStatus = safeMap(orderDAO.getOrderStatusCount());
             Map<String, Integer> customerStatus = safeMap(customerDAO.getCustomerStatusCount());
             Map<String, Integer> reservationStatus = safeMap(reservationDAO.getReservationStatusCount());
 
+<<<<<<< HEAD
             // 🧾 Convert sang JSON để vẽ biểu đồ
+=======
+>>>>>>> LeThuUyen-Staff
             req.setAttribute("revenueLabelsJSON", listToJson(labels));
             req.setAttribute("revenueValuesJSON", listToJson(values));
 
@@ -86,13 +107,19 @@ public class AdminDashboardController extends HttpServlet {
             req.setAttribute("reservationStatusLabels", listToJson(new ArrayList<>(reservationStatus.keySet())));
             req.setAttribute("reservationStatusValues", listToJson(new ArrayList<>(reservationStatus.values())));
 
+<<<<<<< HEAD
             // 📤 Gửi dữ liệu tổng số sang JSP
+=======
+>>>>>>> LeThuUyen-Staff
             req.setAttribute("totalMenuItems", totalMenuItems);
             req.setAttribute("totalOrders", totalOrders);
             req.setAttribute("totalCustomers", totalCustomers);
             req.setAttribute("totalReservations", totalReservations);
 
+<<<<<<< HEAD
             // 🔽 Chuyển sang trang dashboard.jsp
+=======
+>>>>>>> LeThuUyen-Staff
             req.getRequestDispatcher("/Views/admin/dashboard.jsp").forward(req, resp);
 
         } catch (Exception e) {

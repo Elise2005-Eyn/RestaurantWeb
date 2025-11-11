@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.*;
 
 public class TableDAO extends DBContext {
+<<<<<<< HEAD
 
     public List<Map<String, Object>> getTablesPaginated(int page, int pageSize) {
         List<Map<String, Object>> list = new ArrayList<>();
@@ -18,6 +19,20 @@ public class TableDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, (page - 1) * pageSize);
             ps.setInt(2, pageSize);
+=======
+    
+    public List<Map<String, Object>> getALLActiveTables() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = """
+            SELECT table_id, code, area_id, capacity, is_active, note, status
+            FROM RestaurantTable 
+            WHERE is_active = ? 
+            ORDER BY table_id
+        """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, 1);
+>>>>>>> LeThuUyen-Staff
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -28,6 +43,43 @@ public class TableDAO extends DBContext {
                 t.put("capacity", rs.getInt("capacity"));
                 t.put("is_active", rs.getBoolean("is_active"));
                 t.put("note", rs.getString("note"));
+<<<<<<< HEAD
+=======
+                t.put("status", rs.getString("status"));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println("[TableDAO] ❌ Lỗi getTablesPaginated: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Map<String, Object>> getTablesPaginated(int page, int pageSize) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = """
+            SELECT table_id, code, area_id, capacity, is_active, note, status
+            FROM RestaurantTable 
+            WHERE is_active = ? 
+            ORDER BY table_id
+            OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+        """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, 1);
+            ps.setInt(2, (page - 1) * pageSize);
+            ps.setInt(3, pageSize);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> t = new HashMap<>();
+                t.put("id", rs.getInt("table_id"));
+                t.put("code", rs.getString("code"));
+                t.put("area_id", rs.getInt("area_id"));
+                t.put("capacity", rs.getInt("capacity"));
+                t.put("is_active", rs.getBoolean("is_active"));
+                t.put("note", rs.getString("note"));
+                t.put("status", rs.getString("status"));
+>>>>>>> LeThuUyen-Staff
                 list.add(t);
             }
         } catch (SQLException e) {

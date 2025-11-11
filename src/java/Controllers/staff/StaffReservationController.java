@@ -21,7 +21,11 @@ import java.util.List;
  */
 @WebServlet(name = "StaffReservationController", urlPatterns = {"/staff/reservation_list"})
 public class StaffReservationController extends HttpServlet {
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> LeThuUyen-Staff
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
     /**
@@ -57,6 +61,7 @@ public class StaffReservationController extends HttpServlet {
 
         switch (action) {
             case "add":
+<<<<<<< HEAD
                 request.getRequestDispatcher("/Views/staff/order_add.jsp").forward(request, response);
                 break;
 
@@ -64,6 +69,23 @@ public class StaffReservationController extends HttpServlet {
                 handleChangeStatus(request, response);
                 break;
 
+=======
+                request.getRequestDispatcher("/Views/staff/reservation_add.jsp").forward(request, response);
+                break;
+
+            case "confirm":
+                handleChangeStatus(request, response, "CONFIRMED");
+                break;
+
+            case "cancel":
+                handleChangeStatus(request, response, "CANCELLED");
+                break;
+                
+            case "payment":
+                handlePayment(request, response);
+                break;    
+
+>>>>>>> LeThuUyen-Staff
             case "detail":
                 handleDetail(request, response);
                 break;
@@ -97,8 +119,26 @@ public class StaffReservationController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+<<<<<<< HEAD
     private void handleChangeStatus(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+=======
+    private void handleChangeStatus(HttpServletRequest request, HttpServletResponse response, String newStatus) throws IOException {
+        try {
+            long reservationId = Long.parseLong(request.getParameter("id"));
+
+            boolean success = reservationDAO.updateReservationStatus(reservationId, newStatus);
+            if (success) {
+                request.getSession().setAttribute("successMsg", "Cập nhật trạng thái thành công!");
+            } else {
+                request.getSession().setAttribute("errorMsg", "Không thể cập nhật trạng thái!");
+            }
+
+        } catch (Exception e) {
+            request.getSession().setAttribute("errorMsg", "Dữ liệu không hợp lệ!");
+        }
+        response.sendRedirect(request.getContextPath() + "/staff/reservation_list");
+>>>>>>> LeThuUyen-Staff
     }
 
     private void handleDetail(HttpServletRequest request, HttpServletResponse response) {
@@ -132,4 +172,13 @@ public class StaffReservationController extends HttpServlet {
         request.getRequestDispatcher("/Views/staff/reservation_list.jsp").forward(request, response);
     }
 
+<<<<<<< HEAD
+=======
+    private void handlePayment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        
+        request.getRequestDispatcher("/Views/staff/invoice.jsp").forward(request, response);
+    }
+
+>>>>>>> LeThuUyen-Staff
 }
