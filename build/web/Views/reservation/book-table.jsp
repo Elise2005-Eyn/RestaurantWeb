@@ -126,13 +126,24 @@
 <h1>Đặt bàn trước</h1>
 
 <c:if test="${not empty success}">
-    <div class="alert alert-success text-center">${success}</div>
+    <div class="alert alert-success text-center">
+        ${success} <br>
+        <small>Bạn sẽ được chuyển về <a href="home">trang chủ</a> sau 10 giây...</small>
+    </div>
+
+    <!-- Tự động quay lại home sau 10 giây -->
+    <script>
+        setTimeout(() => {
+            window.location.href = "home";
+        }, 10000);
+    </script>
 </c:if>
+
 <c:if test="${not empty error}">
     <div class="alert alert-danger text-center">${error}</div>
 </c:if>
 
-<form action="book-table" method="post">
+<form action="book-table" method="post" id="bookingForm">
     <div class="row g-3">
         <div class="col-md-6">
             <label for="date">Ngày đặt</label>
@@ -140,16 +151,18 @@
         </div>
         <div class="col-md-6">
             <label for="time">Giờ đặt</label>
-            <input type="time" id="time" name="time" class="form-control" required>
+            <input type="time" id="time" name="time" class="form-control"
+                   required min="08:00" max="22:00">
+            <small class="text-warning">⏰ Chỉ nhận đặt bàn từ 08:00 - 22:00</small>
         </div>
 
         <div class="col-md-6">
             <label for="duration">Thời lượng (phút)</label>
-            <input type="number" id="duration" name="duration" class="form-control" value="90" required>
+            <input type="number" id="duration" name="duration" class="form-control" value="90" required min="1">
         </div>
         <div class="col-md-6">
             <label for="guestCount">Số khách</label>
-            <input type="number" id="guestCount" name="guestCount" class="form-control" required>
+            <input type="number" id="guestCount" name="guestCount" class="form-control" required min="1">
         </div>
 
         <div class="col-md-12 mt-3">
@@ -199,7 +212,7 @@
 </footer>
 
 <script>
-    // Ẩn/hiện phần chọn món ăn khi chọn "Đặt món trước"
+    // Ẩn/hiện phần chọn món ăn (đặt món trước)
     document.addEventListener("DOMContentLoaded", () => {
         const orderBefore = document.getElementById("orderBefore");
         const orderAtTable = document.getElementById("orderAtTable");
