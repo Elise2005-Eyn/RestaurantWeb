@@ -194,46 +194,29 @@ public class ReservationDAO extends DBContext {
         return map;
     }
 
-    public boolean hasDuplicateBooking(String customerId, String date, LocalTime start, LocalTime end) {
-        String sql = """
-            SELECT COUNT(*) AS total
-            FROM Reservation
-            WHERE customer_id = ?
-              AND CONVERT(date, reserved_at) = ?
-              AND (
-                    (DATEPART(HOUR, reserved_at) * 60 + DATEPART(MINUTE, reserved_at)) BETWEEN ? AND ?
-                    OR
-                    ((DATEPART(HOUR, DATEADD(MINUTE, reserved_duration, reserved_at)) * 60
-                      + DATEPART(MINUTE, DATEADD(MINUTE, reserved_duration, reserved_at))) BETWEEN ? AND ?)
-                    OR
-                    ((? BETWEEN
-                      (DATEPART(HOUR, reserved_at) * 60 + DATEPART(MINUTE, reserved_at))
-                      AND
-                      (DATEPART(HOUR, DATEADD(MINUTE, reserved_duration, reserved_at)) * 60
-                       + DATEPART(MINUTE, DATEADD(MINUTE, reserved_duration, reserved_at)))))
-                 )
-        """;
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            int startMin = start.getHour() * 60 + start.getMinute();
-            int endMin = end.getHour() * 60 + end.getMinute();
-
-            ps.setString(1, customerId);
-            ps.setString(2, date);
-            ps.setInt(3, startMin);
-            ps.setInt(4, endMin);
-            ps.setInt(5, startMin);
-            ps.setInt(6, endMin);
-            ps.setInt(7, startMin);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("total") > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("❌ Lỗi khi kiểm tra trùng đặt bàn: " + e.getMessage());
+public boolean overlapsForCustomer(String customerId, Timestamp newStart, Timestamp newEnd) {
+    String sql = """
+        SELECT COUNT(*) AS total
+        FROM Reservation r
+        WHERE r.customer_id = ?
+          AND CAST(r.reserved_at AS date) = CAST(? AS date)
+          AND r.status IN ('PENDING','CONFIRMED')
+          AND r.reserved_at < ?  -- existing.start < newEnd
+          AND DATEADD(minute, r.reserved_duration, r.reserved_at) > ? -- existing.end > newStart
+    """;
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, customerId);
+        ps.setTimestamp(2, newStart);
+        ps.setTimestamp(3, newEnd);
+        ps.setTimestamp(4, newStart);
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.next() && rs.getInt("total") > 0;
         }
-        return false;
+    } catch (SQLException e) {
+        System.out.println("❌ Lỗi overlap (customer): " + e.getMessage());
+        return true; // phòng thủ: coi như trùng
     }
+}
+
 
 }
