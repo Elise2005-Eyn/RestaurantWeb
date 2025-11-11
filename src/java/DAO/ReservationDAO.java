@@ -3,7 +3,9 @@ package DAO;
 import Models.Reservation;
 import Utils.DBContext;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,7 +57,12 @@ public class ReservationDAO extends DBContext {
                     Reservation r = new Reservation();
                     r.setReservationId(rs.getString("reservation_id"));
                     r.setCustomerName(rs.getString("customer_name"));
-                    r.setReservedAt(rs.getTimestamp("reserved_at"));
+                    //r.setReservedAt(rs.getTimestamp("reserved_at"));
+                    Timestamp reservedAt = rs.getTimestamp("reserved_at");
+                    r.setReservedAt(reservedAt);
+                    r.setReservedAtFormatted(reservedAt.toLocalDateTime().format(
+                            DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")
+                    ));
                     r.setReservedDuration(rs.getInt("reserved_duration"));
                     r.setGuestCount(rs.getInt("guest_count"));
                     r.setStatus(rs.getString("status"));
@@ -73,7 +80,7 @@ public class ReservationDAO extends DBContext {
 
     public boolean addReservation(Reservation r) {
         String sql = "INSERT INTO Reservation (customer_id, reserved_at, reserved_duration, guest_count, status, note, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, GETDATE())";
+                + "VALUES (?, ?, ?, ?, ?, ?, GETDATE()";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, r.getCustomerId());
             ps.setTimestamp(2, r.getReservedAt());
@@ -232,6 +239,18 @@ public class ReservationDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("❌ Lỗi khi kiểm tra trùng đặt bàn: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean updateReservationStatus(long reservationId, String newStatus) {
+        String sql = "UPDATE Reservation SET status = ? WHERE reservation_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setLong(2, reservationId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("[ReservationDAO] ❌ Lỗi updateOrderStatus: " + e.getMessage());
         }
         return false;
     }

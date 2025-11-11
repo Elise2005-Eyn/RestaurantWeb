@@ -15,6 +15,7 @@ public class Reservation {
     private Timestamp updatedAt;
 
     private String customerName;  //thêm trường để hiển thị trong bảng
+    private String reservedAtFormatted; //dùng cho format lại định dạng ngày
 
     // Getters & setters
     public String getReservationId() {
@@ -95,6 +96,14 @@ public class Reservation {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getReservedAtFormatted() {
+        return reservedAtFormatted;
+    }
+
+    public void setReservedAtFormatted(String reservedAtFormatted) {
+        this.reservedAtFormatted = reservedAtFormatted;
     }
     
     

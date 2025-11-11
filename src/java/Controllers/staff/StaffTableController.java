@@ -1,6 +1,9 @@
 package Controllers.staff;
 
+import DAO.ReservationDAO;
 import DAO.TableDAO;
+import Models.Reservation;
+import Models.RestaurantTable;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -16,27 +19,70 @@ public class StaffTableController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        ReservationDAO reservationDAO = new ReservationDAO();
+        
         String action = req.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+            action = "list";
+        }
 
         switch (action) {
             case "history":
                 showHistory(req, resp);
                 break;
+            //case "list":
+//                List<Reservation> reservations = reservationDAO.getReservationsByStatus("CONFIRMED", 1, 8);
+//                req.setAttribute("reservations", reservations);
+//                //showListTables(req, resp);                
+//                List<Map<String, Object>> tables = tableDAO.getALLActiveTables();
+//                req.setAttribute("tables", tables);
+//                //showListReservation(req, resp);
+//                req.getRequestDispatcher("/Views/staff/table_list_demo.jsp").forward(req, resp);
+//                showListTables(req, resp); 
+                  //showListReservation(req, resp);
+                //showListTables(req, resp);
+                //break;
             default:
-                showList(req, resp);
+                showListTables(req, resp);
         }
     }
 
+    // ==================== HIỂN THỊ DANH SÁCH ĐƠN ĐẶT BÀN ====================
+    private void showListReservation(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int page = 1;
+        int pageSize = 10;
+        ReservationDAO reservationDAO = new ReservationDAO();
+
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch (Exception ignored) {
+        }
+        String status = request.getParameter("CONFIRMED");
+        List<Reservation> reservations;
+        int totalReservations;
+        reservations = reservationDAO.getReservationsByStatus(status, page, pageSize);
+        totalReservations = reservationDAO.getTotalReservationsByStatus(status);
+        request.setAttribute("currentStatus", status);
+
+        int totalPages = (int) Math.ceil((double) totalReservations / pageSize);
+        request.setAttribute("reservations", reservations);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
+        request.getRequestDispatcher("/Views/staff/table_list_demo.jsp").forward(request, response);
+    }
+
     // ==================== HIỂN THỊ DANH SÁCH BÀN ====================
-    private void showList(HttpServletRequest req, HttpServletResponse resp)
+    private void showListTables(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         int page = 1;
         int pageSize = 8;
         try {
             page = Integer.parseInt(req.getParameter("page"));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         String statusParam = req.getParameter("status");
         Boolean isActive = null;
@@ -50,7 +96,7 @@ public class StaffTableController extends HttpServlet {
         int totalTables;
 
         if (isActive == null) {
-            tables = tableDAO.getTablesPaginated(page, pageSize);
+            tables = tableDAO.getALLActiveTables();
             totalTables = tableDAO.getTotalTables();
         } else {
             tables = tableDAO.getTablesByStatus(isActive, page, pageSize);
