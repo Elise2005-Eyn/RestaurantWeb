@@ -56,6 +56,26 @@ public class CartServlet extends HttpServlet {
             case "clear":
                 cart.clear();
                 break;
+
+            case "increment":
+                int incId = Integer.parseInt(req.getParameter("id"));
+                for (CartItem item : cart) {
+                    if (item.getId() == incId) {
+                        item.setQuantity(item.getQuantity() + 1);
+                        break;
+                    }
+                }
+                break;
+
+            case "decrement":
+                int decId = Integer.parseInt(req.getParameter("id"));
+                for (CartItem item : cart) {
+                    if (item.getId() == decId && item.getQuantity() > 1) {
+                        item.setQuantity(item.getQuantity() - 1);
+                        break;
+                    }
+                }
+                break;
         }
 
         session.setAttribute("cart", cart);
