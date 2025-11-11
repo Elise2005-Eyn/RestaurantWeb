@@ -2,11 +2,9 @@ package Controllers;
 
 import DAO.UserDAO;
 import Models.User;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 
 @WebServlet("/auth")
@@ -25,6 +23,13 @@ public class AuthController extends HttpServlet {
             case "register":
                 req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
                 break;
+
+            case "logout":
+                HttpSession session = req.getSession(false);
+                if (session != null) session.invalidate();
+                resp.sendRedirect(req.getContextPath() + "/home");
+                break;
+
             default:
                 req.getRequestDispatcher("/Views/auth/login.jsp").forward(req, resp);
                 break;
@@ -45,6 +50,7 @@ public class AuthController extends HttpServlet {
         }
     }
 
+    // ====================== XỬ LÝ ĐĂNG KÝ ======================
     private void handleRegister(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -55,7 +61,7 @@ public class AuthController extends HttpServlet {
         String phone = req.getParameter("phone");
         String agree = req.getParameter("agree");
 
-        // 🧩 Kiểm tra điều kiện
+        // Kiểm tra dữ liệu đầu vào
         if (username == null || username.isBlank() ||
             email == null || email.isBlank() ||
             password == null || password.isBlank() ||
@@ -69,6 +75,12 @@ public class AuthController extends HttpServlet {
 
         if (!email.matches(".+@.+\\..+")) {
             req.setAttribute("error", "Email không hợp lệ!");
+            req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
+            return;
+        }
+        
+        if (userDAO.emailExists(email)) {
+            req.setAttribute("error", "Email đã tồn tại, vui lòng thử lại");
             req.getRequestDispatcher("/Views/auth/register.jsp").forward(req, resp);
             return;
         }
@@ -91,16 +103,17 @@ public class AuthController extends HttpServlet {
             return;
         }
 
-        // 🧩 Tạo user mới
+        // ✅ Tạo user mới
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
         user.setTelephone(phone);
-        user.setRoleId(2); // 2 = customer
+        user.setRoleId(3); // 3 = customer
         user.setActived(true);
+        user.setPhotoUrl("uploads/default-avatar.png"); // thêm ảnh mặc định
 
-        boolean success = userDAO.register(user); // DAO sẽ tự thêm Customer tương ứng
+        boolean success = userDAO.register(user);
 
         if (success) {
             req.setAttribute("success", "🎉 Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.");
@@ -111,6 +124,7 @@ public class AuthController extends HttpServlet {
         }
     }
 
+    // ====================== XỬ LÝ ĐĂNG NHẬP ======================
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -118,13 +132,43 @@ public class AuthController extends HttpServlet {
         String password = req.getParameter("password");
 
         User user = userDAO.login(email, password);
+
         if (user != null) {
+            // Lấy thêm ảnh, tên... nếu cần
+            User fullUser = userDAO.getUserById(user.getId());
+
             HttpSession session = req.getSession();
-            session.setAttribute("user", user);
-            resp.sendRedirect("home");
+            session.setAttribute("user", fullUser);
+            session.setAttribute("USER_ID", fullUser.getId());
+            session.setAttribute("role", getRoleName(fullUser.getRoleId()));
+
+            switch (fullUser.getRoleId()) {
+                case 1: // Admin
+                    resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+                    break;
+                case 2: // Staff
+                    resp.sendRedirect(req.getContextPath() + "/staff/dashboard");
+                    break;
+                case 3: // Customer
+                    resp.sendRedirect(req.getContextPath() + "/home");
+                    break;
+                default:
+                    resp.sendRedirect(req.getContextPath() + "/home");
+                    break;
+            }
+
         } else {
             req.setAttribute("error", "Sai email hoặc mật khẩu!");
             req.getRequestDispatcher("/Views/auth/login.jsp").forward(req, resp);
+        }
+    }
+
+    private String getRoleName(int roleId) {
+        switch (roleId) {
+            case 1: return "admin";
+            case 2: return "staff";
+            case 3: return "customer";
+            default: return "guest";
         }
     }
 }

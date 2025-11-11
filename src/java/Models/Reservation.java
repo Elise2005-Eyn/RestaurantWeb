@@ -1,55 +1,53 @@
 package Models;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.UUID;
-import java.sql.Date;
 
 public class Reservation {
-    private Long reservationId;         // BIGINT IDENTITY
-    private UUID customerId;            // UNIQUEIDENTIFIER
-    private Date reservedDate;          // DATE (ngày đặt theo ca)
-    private String sessionCode;         // VARCHAR(20): MORNING/LUNCH/TEA/DINNER/EVENING
-    private int guestCount;             // INT (1..10)
-    private String status;              // VARCHAR(20): PENDING/CONFIRMED/SEATED/COMPLETED/...
-    private String note;                // NVARCHAR
-    private Timestamp createdAt;        // DATETIME2
-    private Timestamp updatedAt;        // DATETIME2
-//    private String rejectionReason;     // NVARCHAR (nếu có cột này)
-//    private List<Integer> tableIds;     // dùng khi gán bàn (nếu có)
 
-    public Long getReservationId() {
+    private String reservationId;
+    private String customerId;
+    private Timestamp reservedAt;
+    private int reservedDuration;
+    private int guestCount;
+    private String status;
+    private String note;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+
+    private String customerName;  //thêm trường để hiển thị trong bảng
+
+    // Getters & setters
+    public String getReservationId() {
         return reservationId;
     }
 
-    public void setReservationId(Long reservationId) {
+    public void setReservationId(String reservationId) {
         this.reservationId = reservationId;
     }
 
-    public UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public Date getReservedDate() {
-        return reservedDate;
+    public Timestamp getReservedAt() {
+        return reservedAt;
     }
 
-    public void setReservedDate(Date reservedDate) {
-        this.reservedDate = reservedDate;
+    public void setReservedAt(Timestamp reservedAt) {
+        this.reservedAt = reservedAt;
     }
 
-    public String getSessionCode() {
-        return sessionCode;
+    public int getReservedDuration() {
+        return reservedDuration;
     }
 
-    public void setSessionCode(String sessionCode) {
-        this.sessionCode = sessionCode;
+    public void setReservedDuration(int reservedDuration) {
+        this.reservedDuration = reservedDuration;
     }
-
 
     public int getGuestCount() {
         return guestCount;
@@ -91,5 +89,13 @@ public class Reservation {
         this.updatedAt = updatedAt;
     }
 
-   
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+    
+    
 }
