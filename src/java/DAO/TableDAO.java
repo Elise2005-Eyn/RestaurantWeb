@@ -5,6 +5,9 @@ import java.sql.*;
 import java.util.*;
 
 public class TableDAO extends DBContext {
+    
+    
+    
 
     public List<Map<String, Object>> getTablesPaginated(int page, int pageSize) {
         List<Map<String, Object>> list = new ArrayList<>();

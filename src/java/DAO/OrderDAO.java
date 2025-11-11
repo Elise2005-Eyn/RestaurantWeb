@@ -97,7 +97,113 @@ public class OrderDAO extends DBContext {
         }
     }
 
-
+//    public void saveOrder(List<CartItem> cart, String transactionCode, int userId) {
+//        String orderSql = "INSERT INTO Orders (transaction_code, user_id, total_amount, created_at) VALUES (?, ?, ?, GETDATE())";
+//        String itemSql = "INSERT INTO OrderItems (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+//
+//        Connection conn = null;
+//        PreparedStatement orderPs = null;
+//        PreparedStatement itemPs = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            conn = connection;
+//            conn.setAutoCommit(false); // Bắt đầu transaction
+//
+//            // 1️⃣ Tính tổng tiền
+//            double totalAmount = 0;
+//            for (CartItem item : cart) {
+//                totalAmount += item.getPrice() * item.getQuantity();
+//            }
+//
+//            // 2️⃣ Tạo đơn hàng
+//            orderPs = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
+//            orderPs.setString(1, transactionCode);
+//            orderPs.setInt(2, userId);
+//            orderPs.setDouble(3, totalAmount);
+//            orderPs.executeUpdate();
+//
+//            rs = orderPs.getGeneratedKeys();
+//            if (!rs.next()) {
+//                throw new SQLException("Không thể tạo đơn hàng (không có order_id trả về)");
+//            }
+//
+//            int orderId = rs.getInt(1);
+//
+//            // 3️⃣ Thêm sản phẩm vào OrderItems
+//            itemPs = conn.prepareStatement(itemSql);
+//            for (CartItem item : cart) {
+//                itemPs.setInt(1, orderId);
+//                itemPs.setInt(2, item.getId());       // hoặc getProductId() tuỳ model bạn
+//                itemPs.setInt(3, item.getQuantity());
+//                itemPs.setDouble(4, item.getPrice());
+//                itemPs.addBatch();
+//            }
+//            itemPs.executeBatch();
+//
+//            // 4️⃣ Commit giao dịch
+//            conn.commit();
+//            System.out.println("✅ Lưu đơn hàng thành công (OrderID=" + orderId + ")");
+//        } catch (SQLException e) {
+//            try {
+//                if (conn != null) {
+//                    conn.rollback();
+//                }
+//                System.err.println("❌ Lỗi khi lưu đơn hàng: " + e.getMessage());
+//            } catch (SQLException rollbackEx) {
+//                System.err.println("❌ Rollback thất bại: " + rollbackEx.getMessage());
+//            }
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//            } catch (Exception ignore) {
+//            }
+//            try {
+//                if (orderPs != null) {
+//                    orderPs.close();
+//                }
+//            } catch (Exception ignore) {
+//            }
+//            try {
+//                if (itemPs != null) {
+//                    itemPs.close();
+//                }
+//            } catch (Exception ignore) {
+//            }
+//            try {
+//                if (conn != null) {
+//                    conn.setAutoCommit(true);
+//                }
+//            } catch (Exception ignore) {
+//            }
+//        }
+//    }
+//    public void saveOrder(List<CartItem> cart, String transactionCode) {
+//        String sql = "INSERT INTO Orders (transaction_code, created_at) VALUES (?, GETDATE());";
+//        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//            ps.setString(1, transactionCode);
+//            ps.executeUpdate();
+//            ResultSet rs = ps.getGeneratedKeys();
+//            if (rs.next()) {
+//                int orderId = rs.getInt(1);
+//                String itemSql = "INSERT INTO OrderItems (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+//                try (PreparedStatement itemPs = connection.prepareStatement(itemSql)) {
+//                    for (CartItem item : cart) {
+//                        itemPs.setInt(1, orderId);
+//                        itemPs.setInt(2, item.getProductId());
+//                        itemPs.setInt(3, item.getQuantity());
+//                        itemPs.setDouble(4, item.getPrice());
+//                        itemPs.addBatch();
+//                    }
+//                    itemPs.executeBatch();
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
     // Hàm đếm tổng số đơn hàng
     public int getTotalOrders() {
         String sql = "SELECT COUNT(*) AS total FROM Orders";
@@ -697,4 +803,97 @@ public class OrderDAO extends DBContext {
             System.out.printf("✅ Tổng cộng tính lại: %.0f%n", total);
         }
     }
+    
+     public long createOrGetActiveOrder(int tableId, String customerId) {
+        String find = "SELECT order_id FROM Orders WHERE table_id = ? AND status = 'IN_PROGRESS'";
+        String insert = """
+            INSERT INTO Orders (table_id, customer_id, created_at, amount, status, order_type)
+            VALUES (?, ?, SYSDATETIME(), 0, 'IN_PROGRESS', 'DINE_IN')
+        """;
+        try (PreparedStatement ps = connection.prepareStatement(find)) {
+            ps.setInt(1, tableId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getLong("order_id");
+            }
+            try (PreparedStatement ins = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
+                ins.setInt(1, tableId);
+                ins.setString(2, customerId);
+                ins.executeUpdate();
+                ResultSet keys = ins.getGeneratedKeys();
+                if (keys.next()) return keys.getLong(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("[DB] createOrGetActiveOrder() failed: " + e.getMessage());
+        }
+        return -1;
+    }
+     
+      public boolean addItemToOrder(long orderId, int menuItemId, int quantity) {
+        String sql = """
+            INSERT INTO OrderItems (order_id, menu_item_id, quantity, price, created_at)
+            SELECT ?, ?, ?, price, SYSDATETIME()
+            FROM MenuItem WHERE id = ?
+        """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, orderId);
+            ps.setInt(2, menuItemId);
+            ps.setInt(3, quantity);
+            ps.setInt(4, menuItemId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("[DB] addItemToOrder() failed: " + e.getMessage());
+        }
+        return false;
+    }
+      
+public List<OrderItem> getOrderHistoryByTable(int tableId) {
+    List<OrderItem> list = new ArrayList<>();
+
+    String sql = """
+        SELECT 
+            oi.id AS item_id,
+            oi.order_id,
+            oi.menu_item_id,
+            d.name AS dish_name,
+            oi.quantity,
+            oi.price,
+            oi.note,
+            oi.created_at
+        FROM OrderItems oi
+        JOIN Orders o ON oi.order_id = o.order_id
+        JOIN dishes d ON oi.menu_item_id = d.id
+        WHERE o.table_id = ?
+        ORDER BY oi.created_at DESC
+    """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, tableId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            OrderItem item = new OrderItem();
+            item.setId(rs.getLong("item_id"));
+            item.setOrderId(rs.getLong("order_id"));
+            item.setMenuItemId(rs.getInt("menu_item_id"));
+            item.setQuantity(rs.getInt("quantity"));
+            item.setPrice(rs.getDouble("price"));
+            item.setNote(rs.getString("note"));
+            item.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+            // Tạo log nhỏ để kiểm tra (nếu cần)
+            System.out.printf("[DEBUG] Item %d | %s | Qty=%d | Price=%.2f%n",
+                    item.getId(), rs.getString("dish_name"), item.getQuantity(), item.getPrice());
+
+            list.add(item);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("[DB] getOrderHistoryByTable() failed: " + e.getMessage());
+    }
+
+    return list;
+}
+
+
 }

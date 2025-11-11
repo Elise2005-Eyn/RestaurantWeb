@@ -1,13 +1,29 @@
 package Models;
 
+import java.security.Timestamp;
+
 public class RestaurantTable {
 
     private int tableId;
     private String code;
     private int areaId;
+    private String areaName; // bổ sung để hiển thị tên khu vực
     private int capacity;
     private boolean isActive;
     private String note;
+    private String status; // Trạng thái bàn: AVAILABLE / OCCUPIED / RESERVED / INACTIVE
+    private Timestamp startTime;
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public RestaurantTable() {
+    }
 
     public int getTableId() {
         return tableId;
@@ -33,6 +49,14 @@ public class RestaurantTable {
         this.areaId = areaId;
     }
 
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
     public int getCapacity() {
         return capacity;
     }
@@ -55,5 +79,13 @@ public class RestaurantTable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
