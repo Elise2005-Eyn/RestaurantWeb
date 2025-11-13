@@ -11,19 +11,12 @@
         <style>
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: #000;
+                color: #fff;
                 margin: 0;
-                padding: 40px 60px;
+                padding: 70px; /* tránh bị header che */
             }
 
-            h1 {
-                color: #4b0082;
-                font-size: 26px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 25px;
-            }
             .admin-header {
                 position: fixed;
                 top: 0;
@@ -32,22 +25,46 @@
                 z-index: 1000;
             }
 
+            h1 {
+                color: #FFD700;
+                font-size: 28px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 25px;
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            }
+
             form {
-                background: #fff;
-                padding: 30px 40px;
+                background: #111;
+                padding: 35px 45px;
                 max-width: 700px;
                 border-radius: 12px;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                margin: auto;
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+                border: 1px solid rgba(255, 215, 0, 0.25);
+                animation: fadeIn 0.5s ease-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .form-group {
-                margin-bottom: 18px;
+                margin-bottom: 20px;
             }
 
             label {
                 display: block;
                 font-weight: 600;
-                color: #333;
+                color: #FFD700;
                 margin-bottom: 6px;
                 font-size: 14px;
             }
@@ -59,66 +76,79 @@
             select {
                 width: 100%;
                 padding: 10px 12px;
-                border: 1px solid #ccc;
+                border: 1px solid rgba(255, 215, 0, 0.4);
                 border-radius: 6px;
                 font-size: 14px;
+                background-color: #1a1a1a;
+                color: #fff;
                 box-sizing: border-box;
-                transition: border-color 0.2s;
+                transition: 0.25s;
             }
 
             input:focus,
             textarea:focus,
             select:focus {
-                border-color: #6a11cb;
+                border-color: #FFD700;
+                box-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
                 outline: none;
             }
 
             textarea {
                 resize: vertical;
+                min-height: 90px;
             }
 
             .form-buttons {
-                margin-top: 25px;
+                margin-top: 30px;
                 display: flex;
+                justify-content: flex-end;
                 gap: 10px;
             }
 
+            /* --- Nút Lưu --- */
             .btn-save {
-                background-color: #6a11cb;
-                color: #fff;
-                padding: 10px 20px;
+                background: linear-gradient(90deg, #FFD700, #b8860b);
+                color: #000;
+                padding: 10px 22px;
                 border: none;
                 border-radius: 6px;
                 cursor: pointer;
-                font-weight: 500;
-                transition: 0.2s;
+                font-weight: 600;
+                transition: 0.25s;
             }
 
             .btn-save:hover {
-                background-color: #5012a0;
+                background: linear-gradient(90deg, #ffea00, #daa520);
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+                transform: translateY(-1px);
             }
 
+            /* --- Nút Quay lại --- */
             .btn-back {
-                background-color: #ccc;
-                color: #333;
-                padding: 10px 18px;
-                border: none;
+                background-color: transparent;
+                color: #FFD700;
+                padding: 10px 20px;
+                border: 1px solid rgba(255, 215, 0, 0.4);
                 border-radius: 6px;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
                 font-weight: 500;
+                transition: 0.25s;
             }
 
             .btn-back:hover {
-                background-color: #b3b3b3;
+                background-color: rgba(255, 215, 0, 0.1);
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
             }
 
             .required {
-                color: #d00;
+                color: #ff4c4c;
+                margin-left: 2px;
             }
         </style>
+
     </head>
 
     <body>

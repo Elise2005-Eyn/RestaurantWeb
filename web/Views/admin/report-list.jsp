@@ -9,87 +9,150 @@
         <title>Quản lý Báo cáo</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
         <style>
+            :root {
+                --primary-gold: #FFD700;       /* Vàng chủ đạo */
+                --gold-hover: #ffea70;         /* Vàng sáng khi hover */
+                --bg-dark: #0c0c0c;            /* Nền body */
+                --bg-panel: #1a1a1a;           /* Nền khung/bảng */
+                --text-light: #f5f5f5;         /* Chữ trắng */
+                --border-gold: rgba(255, 215, 0, 0.3);
+                --shadow-gold: rgba(255, 215, 0, 0.15);
+            }
+
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: var(--bg-dark);
+                color: var(--text-light);
                 margin: 0;
-                padding: 40px 60px;
+                padding: 70px;
             }
+
             h1 {
-                color: #4b0082;
+                color: var(--primary-gold);
                 font-size: 26px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                margin-bottom: 25px;
+                margin-bottom: 30px;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
+            .admin-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+            }
+
+            /* --- Thanh Lọc (Filter Bar) --- */
             .filter-bar {
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                background: #fff;
-                padding: 12px 16px;
+                gap: 15px;
+                background: var(--bg-panel);
+                padding: 15px 20px;
                 border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-                margin-bottom: 20px;
+                border: 1px solid var(--border-gold);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Bóng đen sâu */
+                margin-bottom: 25px;
             }
+
             label {
                 font-size: 14px;
-                font-weight: 600;
-                color: #333;
+                font-weight: 700;
+                color: var(--primary-gold);
+                text-transform: uppercase;
             }
+
             select {
                 padding: 8px 12px;
-                border: 1px solid #ccc;
+                border: 1px solid var(--border-gold);
                 border-radius: 6px;
                 font-size: 14px;
+                background-color: #0a0a0a; /* Input tối hơn nền panel */
+                color: #fff;
+                outline: none;
+                transition: 0.3s;
             }
+
+            select:focus {
+                border-color: var(--primary-gold);
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            }
+
+            /* --- Nút Thêm (Add Button) --- */
             .btn-add {
                 display: inline-block;
-                background-color: #6a11cb;
-                color: white;
-                padding: 10px 18px;
+                background-color: var(--primary-gold);
+                color: #000; /* Chữ đen trên nền vàng */
+                padding: 10px 20px;
                 border-radius: 6px;
                 text-decoration: none;
-                font-weight: 500;
-                margin-bottom: 20px;
+                font-weight: 700;
+                margin-bottom: 25px;
+                transition: 0.3s;
+                box-shadow: 0 0 10px var(--shadow-gold);
             }
+
             .btn-add:hover {
-                background-color: #5012a0;
+                background-color: var(--gold-hover);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                transform: translateY(-2px);
             }
+
+            /* --- Bảng (Table) --- */
             table {
                 width: 100%;
                 border-collapse: collapse;
-                background: white;
+                background: var(--bg-panel);
                 border-radius: 10px;
                 overflow: hidden;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                border: 1px solid var(--border-gold);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             }
+
             th, td {
-                padding: 14px 16px;
+                padding: 16px;
                 text-align: left;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.1); /* Viền mờ màu vàng */
             }
+
             th {
-                background-color: #6a11cb;
-                color: white;
+                background-color: #222; /* Header tối màu */
+                color: var(--primary-gold); /* Chữ vàng */
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 13px;
             }
+
             tr:hover {
-                background-color: #f8f8f8;
+                background-color: rgba(255, 215, 0, 0.03); /* Hover vàng rất nhẹ */
             }
+
+            /* --- Hành động (Actions) --- */
             .actions a {
-                margin: 0 6px;
+                margin: 0 8px;
                 text-decoration: none;
                 font-size: 16px;
-            }
-            .actions i:hover {
-                transform: scale(1.2);
+                color: var(--text-light);
                 transition: 0.2s;
             }
+
+            /* Icon thùng rác/sửa khi hover sẽ sáng màu vàng */
+            .actions a:hover {
+                color: var(--primary-gold);
+                transform: scale(1.2);
+                display: inline-block;
+                filter: drop-shadow(0 0 5px var(--primary-gold));
+            }
+
             .no-data {
                 text-align: center;
-                color: #777;
-                padding: 20px 0;
+                color: #888;
+                padding: 30px 0;
+                font-style: italic;
             }
         </style>
     </head>

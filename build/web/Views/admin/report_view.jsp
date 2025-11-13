@@ -9,29 +9,23 @@
         <title>Chi tiết Báo cáo</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
         <style>
+            :root {
+                --primary-gold: #FFD700;
+                --gold-hover: #ffea70;
+                --bg-dark: #0c0c0c;
+                --bg-panel: #1a1a1a;
+                --bg-inset: #0a0a0a;   /* Màu nền tối hơn cho các ô lún xuống */
+                --text-light: #f5f5f5;
+                --text-dim: #bbb;
+                --border-gold: rgba(255, 215, 0, 0.3);
+            }
+
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: var(--bg-dark);
                 margin: 0;
-                padding: 40px 60px;
-            }
-
-            .container {
-                background: white;
-                border-radius: 10px;
-                padding: 30px 40px;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-                max-width: 800px;
-                margin: 0 auto;
-            }
-
-            h1 {
-                color: #4b0082;
-                font-size: 26px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 25px;
+                padding: 70px;
+                color: var(--text-light);
             }
             .admin-header {
                 position: fixed;
@@ -41,64 +35,114 @@
                 z-index: 1000;
             }
 
+            .container {
+                background: var(--bg-panel);
+                border-radius: 10px;
+                padding: 40px 50px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.7); /* Bóng đen sâu */
+                max-width: 800px;
+                margin: 0 auto;
+                border: 1px solid var(--border-gold); /* Viền vàng mờ sang trọng */
+            }
+
+            h1 {
+                color: var(--primary-gold);
+                font-size: 26px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                margin-bottom: 35px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+                border-bottom: 1px solid var(--border-gold);
+                padding-bottom: 15px;
+            }
+
+            /* Grid Layout cho thông tin */
             .report-detail {
                 display: grid;
-                grid-template-columns: 180px 1fr;
-                gap: 15px 25px;
+                grid-template-columns: 200px 1fr; /* Tăng chiều rộng cột label chút cho thoáng */
+                gap: 20px 30px;
+                align-items: baseline;
             }
 
             .report-detail label {
-                font-weight: 600;
-                color: #555;
+                font-weight: 700;
+                color: var(--primary-gold);
                 text-align: right;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .report-detail div {
-                color: #222;
+                color: var(--text-light);
+                font-size: 15px;
+                line-height: 1.5;
             }
 
+            /* Khung mô tả (Description Box) */
             .description {
                 grid-column: 1 / span 2;
-                background: #fafafa;
-                border: 1px solid #eee;
+                background: var(--bg-inset); /* Nền tối hơn để tạo cảm giác "lõm" xuống */
+                border: 1px solid var(--border-gold);
                 border-radius: 8px;
-                padding: 15px;
+                padding: 20px;
                 font-size: 14px;
+                color: #ddd;
+                margin-top: 10px;
+                box-shadow: inset 0 0 10px rgba(0,0,0,0.5); /* Bóng đổ vào trong */
             }
 
+            /* Nút tải file */
             .file-link {
-                display: inline-block;
-                background-color: #6a11cb;
-                color: white;
-                padding: 10px 16px;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background-color: var(--primary-gold);
+                color: #000;
+                padding: 10px 20px;
                 border-radius: 6px;
                 text-decoration: none;
-                font-weight: 500;
-                margin-top: 15px;
+                font-weight: 700;
+                margin-top: 20px;
+                transition: 0.3s;
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
             }
 
             .file-link:hover {
-                background-color: #5012a0;
+                background-color: var(--gold-hover);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                transform: translateY(-2px);
             }
 
+            /* Nút Quay lại (Back Button) */
             .btn-back {
                 display: inline-block;
-                background-color: #ccc;
-                color: #333;
-                padding: 10px 16px;
+                background-color: transparent;
+                color: var(--text-dim);
+                padding: 10px 20px;
                 border-radius: 6px;
                 text-decoration: none;
-                font-weight: 500;
-                margin-top: 25px;
+                font-weight: 600;
+                margin-top: 30px;
+                border: 1px solid #444;
+                transition: 0.3s;
             }
 
             .btn-back:hover {
-                background-color: #b3b3b3;
+                background-color: var(--primary-gold);
+                color: #000;
+                border-color: var(--primary-gold);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
             }
 
             .no-file {
                 color: #777;
                 font-style: italic;
+                margin-top: 15px;
+                display: inline-block;
             }
         </style>
     </head>

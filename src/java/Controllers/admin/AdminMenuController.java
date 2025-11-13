@@ -151,20 +151,45 @@ public class AdminMenuController extends HttpServlet {
 
         switch (action) {
 
-            // ================== THÊM MÓN ==================
+// ================== THÊM MÓN (Đã tối ưu) ==================
             case "add": {
-                MenuItem item = new MenuItem();
-                item.setName(req.getParameter("name"));
-                item.setDescription(req.getParameter("description"));
-                item.setPrice(new BigDecimal(req.getParameter("price")));
-                item.setDiscountPercent(new BigDecimal(req.getParameter("discount_percent")));
-                item.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
-                item.setInventory(Integer.parseInt(req.getParameter("inventory")));
-                item.setImage(req.getParameter("image"));
-                item.setActive(true);
-                item.setCode(req.getParameter("code"));
+                try {
+                    MenuItem item = new MenuItem();
+                    item.setName(req.getParameter("name"));
+                    item.setDescription(req.getParameter("description"));
 
-                menuDAO.addMenuItem(item);
+                    // Xử lý giá (Price) an toàn hơn
+                    String priceStr = req.getParameter("price");
+                    item.setPrice((priceStr != null && !priceStr.isEmpty()) ? new BigDecimal(priceStr) : BigDecimal.ZERO);
+
+                    // Xử lý giảm giá
+                    String discountStr = req.getParameter("discount_percent");
+                    item.setDiscountPercent((discountStr != null && !discountStr.isEmpty()) ? new BigDecimal(discountStr) : BigDecimal.ZERO);
+
+                    item.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
+
+                    // Xử lý tồn kho (Inventory) - Fix lỗi NumberFormatException
+                    String invStr = req.getParameter("inventory");
+                    if (invStr != null && !invStr.trim().isEmpty()) {
+                        item.setInventory(Integer.parseInt(invStr));
+                    } else {
+                        item.setInventory(null);
+                    }
+
+                    item.setImage(req.getParameter("image"));
+
+                    // Xử lý trạng thái (Active) - Tôn trọng lựa chọn từ Form
+                    String activeStr = req.getParameter("is_active");
+                    item.setActive(activeStr == null || Boolean.parseBoolean(activeStr));
+
+                    item.setCode(req.getParameter("code"));
+
+                    menuDAO.addMenuItem(item);
+
+                } catch (Exception e) {
+                    System.out.println("Lỗi khi thêm món: " + e.getMessage());
+                    e.printStackTrace();
+                }
                 resp.sendRedirect(req.getContextPath() + "/admin/menu?action=list");
                 break;
             }
@@ -174,20 +199,59 @@ public class AdminMenuController extends HttpServlet {
                 try {
                     int id = Integer.parseInt(req.getParameter("id"));
                     MenuItem item = menuDAO.getMenuItemById(id);
+
                     if (item != null) {
+                        // 1. Lấy tên và mô tả
                         item.setName(req.getParameter("name"));
                         item.setDescription(req.getParameter("description"));
-                        item.setPrice(new BigDecimal(req.getParameter("price")));
-                        item.setDiscountPercent(new BigDecimal(req.getParameter("discount_percent")));
+
+                        // 2. Xử lý Giá (Price) an toàn
+                        String priceStr = req.getParameter("price");
+                        if (priceStr != null && !priceStr.isEmpty()) {
+                            item.setPrice(new java.math.BigDecimal(priceStr));
+                        }
+
+                        // 3. Xử lý Giảm giá (Discount) an toàn
+                        String discountStr = req.getParameter("discount_percent");
+                        if (discountStr != null && !discountStr.isEmpty()) {
+                            item.setDiscountPercent(new java.math.BigDecimal(discountStr));
+                        } else {
+                            item.setDiscountPercent(java.math.BigDecimal.ZERO);
+                        }
+
+                        // 4. Xử lý Danh mục
                         item.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
-                        item.setInventory(Integer.parseInt(req.getParameter("inventory")));
+
+                        // 5. XỬ LÝ QUAN TRỌNG: Tồn kho (Inventory)
+                        // Kiểm tra null trước khi parse để tránh lỗi
+                        String invStr = req.getParameter("inventory");
+                        if (invStr != null && !invStr.trim().isEmpty()) {
+                            item.setInventory(Integer.parseInt(invStr));
+                        } else {
+                            // Nếu form không gửi inventory lên, giữ nguyên giá trị cũ hoặc set null tùy logic
+                            // Ở đây ta giữ nguyên logic cũ nếu không muốn thay đổi
+                            // item.setInventory(null); 
+                        }
+
+                        // 6. Ảnh và Mã
                         item.setImage(req.getParameter("image"));
-                        item.setActive(Boolean.parseBoolean(req.getParameter("is_active")));
                         item.setCode(req.getParameter("code"));
+
+                        // 7. Trạng thái Active
+                        String activeStr = req.getParameter("is_active");
+                        if (activeStr != null) {
+                            item.setActive(Boolean.parseBoolean(activeStr));
+                        }
+
+                        // 8. Gọi DAO để update
                         menuDAO.updateMenuItem(item);
+
+                        // Log để kiểm tra
+                        System.out.println("Đã cập nhật món ID: " + id);
                     }
                 } catch (Exception e) {
-                    System.out.println("[AdminMenuController] Lỗi khi cập nhật: " + e.getMessage());
+                    System.out.println("[AdminMenuController - Edit] Lỗi: " + e.getMessage());
+                    e.printStackTrace();
                 }
                 resp.sendRedirect(req.getContextPath() + "/admin/menu?action=list");
                 break;

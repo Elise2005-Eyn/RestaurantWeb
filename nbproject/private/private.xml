@@ -3,13 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/dashboard.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/staff-edit.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/account-edit.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/components/staff_header.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/staff-add.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/staff-list.jsp</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/web/Views/admin/account-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/src/java/DAO/ReportDAO.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/voucher-edit.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/report_view.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/voucher-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/staff-add.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/src/java/Models/Report.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/menu-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/src/java/Controllers/admin/AdminMenuController.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/staff-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/src/java/DAO/MenuDAO.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/voucher-add.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/report-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/report_create.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/menu-add.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/account-list.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/dashboard.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/account-add.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/src/java/Controllers/admin/ReportController.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/menu-edit.jsp</file>
+            <file>file:/F:/SWP392/RMS%20GIT/Git%2012-11/RestaurantWeb-main/RestaurantWeb-main/web/Views/admin/staff-edit.jsp</file>
         </group>
     </open-files>
 </project-private>

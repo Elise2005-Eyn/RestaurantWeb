@@ -11,27 +11,12 @@
         <style>
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: #000; /* Nền đen */
+                color: #fff;
                 margin: 0;
-                padding: 40px 60px;
+                padding: 70px; /* đẩy nội dung xuống dưới header cố định */
             }
 
-            h1 {
-                color: #4b0082;
-                font-size: 26px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 25px;
-            }
-
-            form {
-                background: #fff;
-                padding: 30px 40px;
-                max-width: 700px;
-                border-radius: 12px;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            }
             .admin-header {
                 position: fixed;
                 top: 0;
@@ -40,16 +25,36 @@
                 z-index: 1000;
             }
 
+            h1 {
+                color: #FFD700; /* vàng ánh kim */
+                font-size: 28px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 30px;
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            }
+
+            form {
+                background: #111; /* đen đậm hơn nền */
+                padding: 40px 50px;
+                max-width: 750px;
+                border-radius: 14px;
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
+                border: 1px solid rgba(255, 215, 0, 0.2);
+                margin: 0 auto;
+            }
+
             .form-group {
-                margin-bottom: 18px;
+                margin-bottom: 20px;
             }
 
             label {
                 display: block;
                 font-weight: 600;
-                color: #333;
-                margin-bottom: 6px;
-                font-size: 14px;
+                color: #FFD700;
+                margin-bottom: 8px;
+                font-size: 15px;
             }
 
             input[type="text"],
@@ -58,18 +63,21 @@
             textarea,
             select {
                 width: 100%;
-                padding: 10px 12px;
-                border: 1px solid #ccc;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: 10px 14px;
+                border: 1px solid rgba(255, 215, 0, 0.4);
+                border-radius: 8px;
+                background-color: #1a1a1a;
+                color: #fff;
+                font-size: 15px;
+                transition: 0.25s;
                 box-sizing: border-box;
-                transition: border-color 0.2s;
             }
 
             input:focus,
             textarea:focus,
             select:focus {
-                border-color: #6a11cb;
+                border-color: #FFD700;
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
                 outline: none;
             }
 
@@ -77,48 +85,55 @@
                 resize: vertical;
             }
 
+            .required {
+                color: #ff4c4c;
+            }
+
             .form-buttons {
-                margin-top: 25px;
+                margin-top: 30px;
                 display: flex;
-                gap: 10px;
+                gap: 12px;
+                justify-content: flex-end;
             }
 
             .btn-save {
-                background-color: #6a11cb;
-                color: #fff;
-                padding: 10px 20px;
+                background: linear-gradient(90deg, #FFD700, #b8860b);
+                color: #000;
                 border: none;
-                border-radius: 6px;
+                padding: 10px 22px;
+                border-radius: 8px;
                 cursor: pointer;
-                font-weight: 500;
-                transition: 0.2s;
+                font-weight: bold;
+                transition: all 0.25s ease;
             }
 
             .btn-save:hover {
-                background-color: #5012a0;
+                background: linear-gradient(90deg, #ffea00, #daa520);
+                transform: translateY(-1px);
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
             }
 
             .btn-back {
-                background-color: #ccc;
-                color: #333;
-                padding: 10px 18px;
-                border: none;
-                border-radius: 6px;
+                background-color: transparent;
+                color: #FFD700;
+                padding: 10px 20px;
+                border: 1px solid rgba(255, 215, 0, 0.4);
+                border-radius: 8px;
                 text-decoration: none;
+                font-weight: 500;
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
-                font-weight: 500;
+                transition: all 0.25s ease;
             }
 
             .btn-back:hover {
-                background-color: #b3b3b3;
-            }
-
-            .required {
-                color: #d00;
+                background-color: rgba(255, 215, 0, 0.1);
+                border-color: #FFD700;
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
             }
         </style>
+
     </head>
 
     <body>

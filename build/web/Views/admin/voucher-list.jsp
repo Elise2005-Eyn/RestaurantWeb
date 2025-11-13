@@ -12,19 +12,12 @@
         <style>
             body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #f5f6fa;
+                background-color: #000;
+                color: #fff;
                 margin: 0;
-                padding: 40px 60px;
+                padding: 70px; /* đẩy nội dung xuống để tránh header */
             }
 
-            h1 {
-                color: #4b0082;
-                font-size: 26px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 25px;
-            }
             .admin-header {
                 position: fixed;
                 top: 0;
@@ -33,20 +26,33 @@
                 z-index: 1000;
             }
 
+            h1 {
+                color: #FFD700;
+                font-size: 28px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 25px;
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            }
+
             /* --- Nút thêm --- */
             .btn-add {
                 display: inline-block;
-                background-color: #6a11cb;
-                color: white;
-                padding: 10px 18px;
+                background: linear-gradient(90deg, #FFD700, #b8860b);
+                color: #000;
+                padding: 10px 20px;
                 border-radius: 6px;
                 text-decoration: none;
-                font-weight: 500;
+                font-weight: 600;
                 margin-bottom: 20px;
+                transition: 0.25s;
             }
 
             .btn-add:hover {
-                background-color: #5012a0;
+                background: linear-gradient(90deg, #ffea00, #daa520);
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+                transform: translateY(-1px);
             }
 
             /* --- Form tìm kiếm --- */
@@ -56,10 +62,11 @@
                 align-items: flex-end;
                 gap: 15px;
                 margin-bottom: 25px;
-                background: white;
-                padding: 15px 20px;
+                background: #111;
+                padding: 20px 25px;
                 border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+                border: 1px solid rgba(255, 215, 0, 0.2);
             }
 
             .search-group {
@@ -69,7 +76,7 @@
 
             label {
                 font-size: 13px;
-                color: #555;
+                color: #FFD700;
                 margin-bottom: 5px;
                 font-weight: 600;
             }
@@ -78,85 +85,104 @@
             input[type="number"],
             select {
                 padding: 8px 10px;
-                border: 1px solid #ccc;
+                border: 1px solid rgba(255, 215, 0, 0.4);
                 border-radius: 6px;
                 font-size: 14px;
                 width: 180px;
+                background-color: #1a1a1a;
+                color: #fff;
+                transition: 0.25s;
+            }
+
+            input:focus,
+            select:focus {
+                border-color: #FFD700;
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+                outline: none;
             }
 
             .btn-search {
-                background-color: #6a11cb;
-                color: white;
+                background: linear-gradient(90deg, #FFD700, #b8860b);
+                color: #000;
                 border: none;
                 padding: 10px 18px;
                 border-radius: 6px;
                 cursor: pointer;
-                font-weight: 500;
+                font-weight: 600;
+                transition: 0.25s;
+            }
+
+            .btn-search:hover {
+                background: linear-gradient(90deg, #ffea00, #daa520);
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
             }
 
             .btn-reset {
-                background-color: #ccc;
-                color: #333;
-                border: none;
+                background-color: transparent;
+                color: #FFD700;
+                border: 1px solid rgba(255, 215, 0, 0.4);
                 padding: 10px 16px;
                 border-radius: 6px;
                 cursor: pointer;
                 font-weight: 500;
                 text-decoration: none;
+                transition: 0.25s;
             }
 
-            .btn-search:hover {
-                background-color: #5012a0;
-            }
             .btn-reset:hover {
-                background-color: #b3b3b3;
+                background-color: rgba(255, 215, 0, 0.1);
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
             }
 
             /* --- Bảng --- */
             table {
                 width: 100%;
                 border-collapse: collapse;
-                background: white;
+                background: #111;
                 border-radius: 10px;
                 overflow: hidden;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
+                border: 1px solid rgba(255, 215, 0, 0.15);
             }
 
             th, td {
                 padding: 14px 16px;
                 text-align: center;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.1);
                 font-size: 14px;
             }
 
             th {
-                background-color: #6a11cb;
-                color: white;
+                background-color: #FFD700;
+                color: #000;
+                text-transform: uppercase;
             }
 
             tr:hover {
-                background-color: #f8f8f8;
+                background-color: rgba(255, 215, 0, 0.05);
             }
 
             .status-active {
-                color: green;
-                font-weight: 500;
+                color: #00ff7f;
+                font-weight: 600;
             }
 
             .status-hidden {
-                color: red;
-                font-weight: 500;
+                color: #ff4c4c;
+                font-weight: 600;
             }
 
             .actions a {
                 margin: 0 6px;
+                color: #FFD700;
                 text-decoration: none;
                 font-size: 16px;
+                transition: 0.2s;
             }
 
-            .actions i:hover {
+            .actions a:hover {
+                color: #fff;
                 transform: scale(1.2);
-                transition: 0.2s;
             }
 
             /* --- Phân trang --- */
@@ -169,23 +195,30 @@
                 margin: 0 4px;
                 padding: 8px 12px;
                 border-radius: 5px;
-                background: #eee;
-                color: #333;
+                background: #1a1a1a;
+                color: #FFD700;
                 text-decoration: none;
+                border: 1px solid rgba(255, 215, 0, 0.3);
+                transition: 0.25s;
             }
 
             .pagination .current {
-                background: #6a11cb;
-                color: white;
+                background: linear-gradient(90deg, #FFD700, #b8860b);
+                color: #000;
                 font-weight: bold;
+            }
+
+            .pagination a:hover {
+                background: rgba(255, 215, 0, 0.1);
             }
 
             .no-data {
                 text-align: center;
-                color: #777;
-                padding: 20px 0;
+                color: #bbb;
+                padding: 25px 0;
             }
         </style>
+
     </head>
 
     <body>
