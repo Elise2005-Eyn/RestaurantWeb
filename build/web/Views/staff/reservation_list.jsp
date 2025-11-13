@@ -4,7 +4,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Danh sách đơn đặt bàn</title>
+        <title>Quản lý đặt bàn - Staff</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style>
@@ -193,62 +193,10 @@
             .action-btns {
                 display: flex;
                 gap: 0.5rem;
-                justify-content: right;
+                justify-content: center;
                 align-items: center;
             }
 
-            .btn-confirm {
-                background: #198754;
-                color: white;
-                border: none;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                font-size: 0.85rem;
-                font-weight: 600;
-                transition: var(--transition);
-                min-width: 100px;
-            }
-            .btn-confirm:hover {
-                background: #146c43;
-                transform: translateY(-2px);
-            }
-
-            .btn-cancel {
-                background: #dc3545;
-                color: white;
-                border: none;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                font-size: 0.85rem;
-                font-weight: 600;
-                transition: var(--transition);
-                min-width: 100px;
-            }
-
-            .btn-cancel:hover {
-                background: #b02a37;
-                transform: translateY(-2px);
-            }
-            
-            .btn-payment {
-                background: #0d6efd; /* Màu xanh dương cho thanh toán */
-                color: white;
-                border: none;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                font-size: 0.85rem;
-                font-weight: 600;
-                transition: var(--transition);
-                min-width: 100px;
-                box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3); /* Thêm bóng nhẹ */
-            }
-
-            .btn-payment:hover {
-                background: #0a58ca;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4); /* Tăng bóng khi hover */
-            }
-            
             .action-btns select {
                 background: var(--color-gray-medium);
                 border: 1px solid var(--color-gray-light);
@@ -382,11 +330,6 @@
                 }
                 .action-btns {
                     justify-content: flex-end;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-                .btn-confirm, .btn-cancel {
-                    width: 100%;
                 }
             }
         </style>
@@ -400,28 +343,11 @@
         <div class="container">
             <!-- Tiêu đề + Nút thêm -->
             <div class="page-title">
-                <h3><i class="fas fa-receipt"></i> Danh sách đơn đặt bàn</h3>
+                <h3><i class="fas fa-receipt"></i> Quản lý Đặt bàn</h3>
                 <a href="${pageContext.request.contextPath}/staff/reservation_list?action=add" class="btn btn-add">
                     <i class="fas fa-plus-circle"></i> Đặt bàn
                 </a>
             </div>
-
-            <!-- Hiển thị thông báo thành công / thất bại -->
-            <c:if test="${not empty sessionScope.successMsg}">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    ${sessionScope.successMsg}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <c:remove var="successMsg" scope="session"/>
-            </c:if>
-
-            <c:if test="${not empty sessionScope.errorMsg}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${sessionScope.errorMsg}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <c:remove var="errorMsg" scope="session"/>
-            </c:if>
 
             <!-- Bộ lọc trạng thái -->
             <form method="get" action="${pageContext.request.contextPath}/staff/reservation_list"
@@ -431,98 +357,41 @@
                         onchange="this.form.submit()">
                     <option value="">Tất cả</option>
                     <option value="PENDING" ${currentStatus == 'PENDING' ? 'selected' : ''}>Chờ xử lý</option>
-                    <option value="IN_PROGRESS" ${currentStatus == 'CONFIRMED' ? 'selected' : ''}>Đã xác nhận</option>
-                    <option value="SEATED" ${currentStatus == 'SEATED' ? 'selected' : ''}>Đang phục vụ</option>
-                    <option value="COMPLETED" ${currentStatus == 'COMPLETED' ? 'selected' : ''}>Hoàn tất</option>
+                    <option value="CONFIRMED" ${currentStatus == 'CONFIRMED' ? 'selected' : ''}>Đã duyệt</option>
+                    <option value="DONE" ${currentStatus == 'DONE' ? 'selected' : ''}>Hoàn tất</option>
                     <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
                 </select>
             </form>
-            
+
             <!-- Bảng danh sách đơn hàng -->
             <div class="card shadow-sm border-0">
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="text-center text-secondary fw-semibold">
                             <tr>
-                                <th style="width: 8%;">Mã đặt bàn</th>
+                                <th style="width: 10%;">Mã Đặt bàn</th>
                                 <th style="width: 10%;">Khách hàng</th>
-                                <th style="width: 10%;">Thời gian dùng bữa</th>
-                                <th style="width: 8%;">Số khách</th>
-                                <th style="width: 22%;">Note</th>
-                                <th style="width: 8%;">Trạng thái</th>
-                                <th style="width: 24%;">Hành động</th>
+                                <th style="width: 20%;">Thời gian đặt</th>
+                                <th style="width: 10%;">Số khách</th>
+                                <th style="width: 15%;">Note</th>
+                                <th style="width: 10%;">Trạng thái</th>
+                                <th style="width: 20%;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="r" items="${reservations}">
-                                <tr id="reservation-${r.reservationId}">
+                                <tr id="order-${r.reservationId}">
                                     <td class="text-center fw-semibold text-secondary">${r.reservationId}</td>
-                                    <td class="text-center fw-semibold text-secondary">${r.customerName}</td>
-                                    <td class="text-center fw-semibold text-secondary">${r.reservedAtFormatted}</td>
-                                    <td class="text-center fw-semibold text-secondary">${r.guestCount}</td>
-                                    <td class="text-center fw-semibold text-secondary">${r.note}</td>
-                                    <td class="text-center fw-semibold text-secondary">
+                                    <td>${r.customerName}</td>
+                                    <td class="text-center">${r.reservedAt}</td>
+                                    <td class="fw-semibold text-success text-center">${r.guestCount}</td>
+                                    <td class="text-center">${r.note}</td>
+                                    <td class="text-center">
                                         <span class="status-badge status-${r.status}" id="status-${r.reservationId}">
                                             ${r.status}
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <!-- Form đổi trạng thái -->
-                                            <form action="${pageContext.request.contextPath}/staff/reservation_list" method="get" class="d-flex align-items-center">
-                                                <!-- Chỉ hiển thị button theo yêu cầu -->
-                                                <c:choose>
-                                                    <c:when test="${r.status == 'PENDING'}">
-                                                        <!-- Cả 2 button -->
-                                                        <form action="${pageContext.request.contextPath}/staff/reservations" method="post" style="display:inline;">
-                                                            <input type="hidden" name="action" value="confirm">
-                                                            <input type="hidden" name="id" value="${r.reservationId}">
-                                                            <button type="submit" class="btn-confirm">
-                                                                <i class="fas fa-check me-1"></i> Xác nhận
-                                                            </button>
-                                                        </form>
-
-                                                        <form action="${pageContext.request.contextPath}/staff/reservations" method="post" style="display:inline;">
-                                                            <input type="hidden" name="action" value="cancel">
-                                                            <input type="hidden" name="id" value="${r.reservationId}">
-                                                            <button type="submit" class="btn-cancel">
-                                                                <i class="fas fa-times me-1"></i> Hủy
-                                                            </button>
-                                                        </form>
-                                                    </c:when>
-                                                    <c:when test="${r.status == 'COMPLETED'}">
-                                                        <input type="hidden" name="action" value="payment">
-                                                            <input type="hidden" name="id" value="${r.reservationId}">
-                                                            <button type="submit" class="btn-payment">
-                                                                <i class="fas fa-money-bill-wave me-1"></i> Thanh toán
-                                                            </button>
-                                                    </c:when>
-                                                        <c:when test="${r.status == 'CANCELLED' || r.status == 'SEATED'}">
-                                                        <span class="text-muted"> </span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <!-- Chỉ button Hủy cho CONFIRMED hoặc các trạng thái khác -->
-                                                        <form action="${pageContext.request.contextPath}/staff/reservations" method="post" style="display:inline;">
-                                                            <input type="hidden" name="action" value="cancel">
-                                                            <input type="hidden" name="id" value="${r.reservationId}">
-                                                            <button type="submit" class="btn-cancel">
-                                                                <i class="fas fa-times me-1"></i> Hủy
-                                                            </button>
-                                                        </form>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <button type="submit" class="btn-sync" title="Cập nhật trạng thái">
-                                                    <i class="fas fa-sync-alt"></i>
-                                                </button>
-                                            </form>
-
-                                            <!-- Nút xem chi tiết -->
-                                            <a href="${pageContext.request.contextPath}/staff/orders?action=detail&id=${r.reservationId}"
-                                               class="btn-view" title="Xem chi tiết">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                             </c:forEach>
 

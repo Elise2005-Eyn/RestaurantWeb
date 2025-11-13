@@ -47,14 +47,13 @@
                 <li class="nav-item">
                     <a class="nav-link position-relative text-white" 
                        href="${pageContext.request.contextPath}/staff/reservation_list">
-                        Danh sách đặt bàn
+                        Quản lý Đặt bàn
                         <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
                               style="transition: opacity 0.3s ease; height: 2px;"></span>
                     </a>
                 </li>
                 <li class="nav-item"><a class="nav-link position-relative text-white" 
-                                        href="${pageContext.request.contextPath}/staff/tables">
-                        Tình trạng bàn
+                                        href="${pageContext.request.contextPath}/staff/tables">Khu vực bàn
                         <span class="position-absolute bottom-0 start-0 w-100 h-1px bg-warning opacity-0" 
                               style="transition: opacity 0.3s ease; height: 2px;"></span>
                     </a>
