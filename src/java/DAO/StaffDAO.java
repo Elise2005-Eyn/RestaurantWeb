@@ -234,7 +234,7 @@ public class StaffDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = """
             SELECT * FROM (
-                SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS row_num, *
+                SELECT ROW_NUMBER() OVER (ORDER BY id ASC) AS row_num, *
                 FROM Users WHERE role_id = 2
             ) AS temp
             WHERE row_num BETWEEN ? AND ?
@@ -341,7 +341,7 @@ public class StaffDAO extends DBContext {
 
         StringBuilder sql = new StringBuilder("""
         SELECT * FROM (
-            SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS row_num, *
+            SELECT ROW_NUMBER() OVER (ORDER BY id ASC) AS row_num, *
             FROM Users
             WHERE role_id = 2
         """);

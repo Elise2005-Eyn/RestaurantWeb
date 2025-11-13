@@ -13,7 +13,7 @@ public class ReportDAO extends DBContext {
 
     public List<Report> getAllReports() {
         List<Report> list = new ArrayList<>();
-        String sql = "SELECT * FROM Reports ORDER BY created_at DESC";
+        String sql = "SELECT * FROM Reports ORDER BY created_at ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -145,7 +145,7 @@ public class ReportDAO extends DBContext {
 // Lọc theo loại báo cáo
     public List<Report> getReportsByType(String reportType) {
         List<Report> list = new ArrayList<>();
-        String sql = "SELECT * FROM Reports WHERE (? = '' OR report_type = ?) ORDER BY created_at DESC";
+        String sql = "SELECT * FROM Reports WHERE (? = '' OR report_type = ?) ORDER BY created_at ASC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, reportType);
             ps.setString(2, reportType);

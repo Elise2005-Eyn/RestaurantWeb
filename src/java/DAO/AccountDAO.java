@@ -11,7 +11,7 @@ public class AccountDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = """
             SELECT * FROM (
-                SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS row_num, *
+                SELECT ROW_NUMBER() OVER (ORDER BY id ASC) AS row_num, *
                 FROM Users
             ) AS temp
             WHERE row_num BETWEEN ? AND ?
@@ -141,7 +141,7 @@ public class AccountDAO extends DBContext {
             sql.append(" AND is_actived = ").append(status.equals("active") ? 1 : 0);
         }
 
-        sql.append(" ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        sql.append(" ORDER BY id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int idx = 1;
