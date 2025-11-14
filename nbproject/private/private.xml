@@ -3,16 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/StaffDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/CustomerDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/DishDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/AccountDAO.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/Utils/DBContext.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/Controllers/BookTableController.java</file>
             <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/Controllers/AuthController.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/ReservationDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/OrderDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/ReservationSessionDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/MenuDAO.java</file>
-            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/DAO/ReportDAO.java</file>
+            <file>file:/F:/SWP392/RMS%20GIT/RestaurantWeb/src/java/Controllers/CartServlet.java</file>
         </group>
     </open-files>
 </project-private>

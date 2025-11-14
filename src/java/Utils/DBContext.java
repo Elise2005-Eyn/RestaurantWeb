@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBContext {
 
-    private static final String DB_NAME = "restaurant_dbv5";
+    private static final String DB_NAME = "restaurant_dbv6";
     private static final String USER_NAME = "sa";
     private static final String PASSWORD = "123";
     private static final String HOST = "localhost";
